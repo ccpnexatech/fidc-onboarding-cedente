@@ -18,3 +18,23 @@ jobs:
       - run: npm ci
         working-directory: api
       - run: make check
+
+  homologacao:
+    name: homologação (Newman)
+    runs-on: ubuntu-latest
+    needs: check
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: api/package-lock.json
+      - run: npm ci
+        working-directory: api
+      - run: make newman
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: newman-junit
+          path: api/reports/newman.xml

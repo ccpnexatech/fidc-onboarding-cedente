@@ -1,0 +1,1313 @@
+{
+  "info": {
+    "name": "FIDC simulado · API de remessa · homologação",
+    "description": "Coleção de homologação da API de remessa (P2). Cada request cita a história e a regra (HU-NN · RN-NN · caso). Rodar contra o mock recém-iniciado (`make newman`), com REFERENCE_DATE=2026-10-14 e a carteira simulada.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "batchId",
+      "value": ""
+    },
+    {
+      "key": "idempotentBatchId",
+      "value": ""
+    },
+    {
+      "key": "batchWithRejections",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "HU-01 · RN-10 · remessa válida de cedente habilitado",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('201 · remessa recebida', () => pm.response.to.have.status(201));",
+              "pm.test('2 título(s) aceito(s)', () => pm.expect(pm.response.json().totals.accepted).to.equal(2));",
+              "pm.test('Location aponta para a remessa', () => pm.expect(pm.response.headers.get('Location')).to.equal('/remessas/' + pm.response.json().id));",
+              "pm.test('data de referência 2026-10-14', () => pm.expect(pm.response.json().referenceDate).to.equal('2026-10-14'));",
+              "pm.collectionVariables.set('batchId', pm.response.json().id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"assignorId\": \"12345678000195\",\n  \"receivables\": [\n    {\n      \"externalId\": \"DM-HOMOLOG-0002\",\n      \"type\": \"TRADE_BILL\",\n      \"debtor\": {\n        \"taxId\": \"88999000000198\",\n        \"name\": \"Sacado Homologacao Ltda\"\n      },\n      \"faceValue\": 1000000,\n      \"issueDate\": \"2026-10-01\",\n      \"dueDate\": \"2026-12-14\",\n      \"invoiceKey\": \"35261012345678000195550090021111111111111111\",\n      \"annualDiscountRateBasisPoints\": 2400\n    },\n    {\n      \"externalId\": \"DM-HOMOLOG-0003\",\n      \"type\": \"SERVICE_BILL\",\n      \"debtor\": {\n        \"taxId\": \"88999000000198\",\n        \"name\": \"Sacado Homologacao Ltda\"\n      },\n      \"faceValue\": 1000000,\n      \"issueDate\": \"2026-10-01\",\n      \"dueDate\": \"2026-12-14\",\n      \"invoiceKey\": \"35261012345678000195550090031111111111111111\",\n      \"annualDiscountRateBasisPoints\": 2400\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/remessas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "remessas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "HU-10 · consulta da remessa existente",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('200', () => pm.response.to.have.status(200));",
+              "pm.test('mesmo id e 2 aceitos', () => {",
+              "  pm.expect(pm.response.json().id).to.equal(pm.collectionVariables.get('batchId'));",
+              "  pm.expect(pm.response.json().acceptedReceivables).to.have.lengthOf(2);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/remessas/{{batchId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "remessas",
+            "{{batchId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "HU-10 · remessa inexistente",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('404 · problem+json', () => {",
+              "  pm.response.to.have.status(404);",
+              "  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/problem+json');",
+              "});",
+              "pm.test('code BATCH_NOT_FOUND', () => pm.expect(pm.response.json().code).to.equal('BATCH_NOT_FOUND'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/remessas/00000000-0000-4000-8000-000000000000",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "remessas",
+            "00000000-0000-4000-8000-000000000000"
+          ]
+        }
+      }
+    },
+    {
+      "name": "HU-01 · RN-10 · cedente suspenso",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('422 · problem+json', () => {",
+              "  pm.response.to.have.status(422);",
+              "  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/problem+json');",
+              "});",
+              "pm.test('code RN-10_ASSIGNOR_NOT_ENABLED', () => pm.expect(pm.response.json().code).to.equal('RN-10_ASSIGNOR_NOT_ENABLED'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"assignorId\": \"98765432000198\",\n  \"receivables\": [\n    {\n      \"externalId\": \"DM-HOMOLOG-0004\",\n      \"type\": \"TRADE_BILL\",\n      \"debtor\": {\n        \"taxId\": \"88999000000198\",\n        \"name\": \"Sacado Homologacao Ltda\"\n      },\n      \"faceValue\": 1000000,\n      \"issueDate\": \"2026-10-01\",\n      \"dueDate\": \"2026-12-14\",\n      \"invoiceKey\": \"35261012345678000195550090041111111111111111\",\n      \"annualDiscountRateBasisPoints\": 2400\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/remessas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "remessas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "HU-01 · RN-10 · cedente em análise",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('422 · problem+json', () => {",
+              "  pm.response.to.have.status(422);",
+              "  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/problem+json');",
+              "});",
+              "pm.test('code RN-10_ASSIGNOR_NOT_ENABLED', () => pm.expect(pm.response.json().code).to.equal('RN-10_ASSIGNOR_NOT_ENABLED'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"assignorId\": \"77888999000181\",\n  \"receivables\": [\n    {\n      \"externalId\": \"DM-HOMOLOG-0005\",\n      \"type\": \"TRADE_BILL\",\n      \"debtor\": {\n        \"taxId\": \"88999000000198\",\n        \"name\": \"Sacado Homologacao Ltda\"\n      },\n      \"faceValue\": 1000000,\n      \"issueDate\": \"2026-10-01\",\n      \"dueDate\": \"2026-12-14\",\n      \"invoiceKey\": \"35261012345678000195550090051111111111111111\",\n      \"annualDiscountRateBasisPoints\": 2400\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/remessas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "remessas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "HU-01 · RN-10 · cedente não cadastrado",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('422 · problem+json', () => {",
+              "  pm.response.to.have.status(422);",
+              "  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/problem+json');",
+              "});",
+              "pm.test('code RN-10_ASSIGNOR_NOT_ENABLED', () => pm.expect(pm.response.json().code).to.equal('RN-10_ASSIGNOR_NOT_ENABLED'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"assignorId\": \"13579246000101\",\n  \"receivables\": [\n    {\n      \"externalId\": \"DM-HOMOLOG-0006\",\n      \"type\": \"TRADE_BILL\",\n      \"debtor\": {\n        \"taxId\": \"88999000000198\",\n        \"name\": \"Sacado Homologacao Ltda\"\n      },\n      \"faceValue\": 1000000,\n      \"issueDate\": \"2026-10-01\",\n      \"dueDate\": \"2026-12-14\",\n      \"invoiceKey\": \"35261012345678000195550090061111111111111111\",\n      \"annualDiscountRateBasisPoints\": 2400\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/remessas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "remessas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "HU-01 · payload inválido · sem lista de recebíveis",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('400 · problem+json', () => {",
+              "  pm.response.to.have.status(400);",
+              "  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/problem+json');",
+              "});",
+              "pm.test('code VALIDATION_ERROR', () => pm.expect(pm.response.json().code).to.equal('VALIDATION_ERROR'));",
+              "pm.test('aponta o campo /receivables', () => pm.expect(pm.response.json().errors.map((error) => error.field)).to.include('/receivables'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"assignorId\": \"12345678000195\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/remessas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "remessas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "HU-01 · payload inválido · CNPJ do sacado com dígito errado",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('400 · problem+json', () => {",
+              "  pm.response.to.have.status(400);",
+              "  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/problem+json');",
+              "});",
+              "pm.test('code VALIDATION_ERROR', () => pm.expect(pm.response.json().code).to.equal('VALIDATION_ERROR'));",
+              "pm.test('aponta o taxId do sacado', () => pm.expect(pm.response.json().errors[0].field).to.equal('/receivables/0/debtor/taxId'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"assignorId\": \"12345678000195\",\n  \"receivables\": [\n    {\n      \"externalId\": \"DM-HOMOLOG-0007\",\n      \"type\": \"TRADE_BILL\",\n      \"debtor\": {\n        \"taxId\": \"12345678000100\",\n        \"name\": \"Sacado\"\n      },\n      \"faceValue\": 1000000,\n      \"issueDate\": \"2026-10-01\",\n      \"dueDate\": \"2026-12-14\",\n      \"invoiceKey\": \"35261012345678000195550090071111111111111111\",\n      \"annualDiscountRateBasisPoints\": 2400\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/remessas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "remessas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "HU-01 · payload inválido · JSON malformado",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('400 · problem+json', () => {",
+              "  pm.response.to.have.status(400);",
+              "  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/problem+json');",
+              "});",
+              "pm.test('code MALFORMED_REQUEST', () => pm.expect(pm.response.json().code).to.equal('MALFORMED_REQUEST'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"assignorId\": "
+        },
+        "url": {
+          "raw": "{{baseUrl}}/remessas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "remessas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "HU-01 · sem Idempotency-Key",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('400 · problem+json', () => {",
+              "  pm.response.to.have.status(400);",
+              "  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/problem+json');",
+              "});",
+              "pm.test('code MISSING_IDEMPOTENCY_KEY', () => pm.expect(pm.response.json().code).to.equal('MISSING_IDEMPOTENCY_KEY'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"assignorId\": \"12345678000195\",\n  \"receivables\": [\n    {\n      \"externalId\": \"DM-HOMOLOG-0008\",\n      \"type\": \"TRADE_BILL\",\n      \"debtor\": {\n        \"taxId\": \"88999000000198\",\n        \"name\": \"Sacado Homologacao Ltda\"\n      },\n      \"faceValue\": 1000000,\n      \"issueDate\": \"2026-10-01\",\n      \"dueDate\": \"2026-12-14\",\n      \"invoiceKey\": \"35261012345678000195550090081111111111111111\",\n      \"annualDiscountRateBasisPoints\": 2400\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/remessas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "remessas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "HU-02 · primeiro envio com chave fixa",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('201 · remessa recebida', () => pm.response.to.have.status(201));",
+              "pm.test('1 título(s) aceito(s)', () => pm.expect(pm.response.json().totals.accepted).to.equal(1));",
+              "pm.collectionVariables.set('idempotentBatchId', pm.response.json().id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "homolog-chave-001"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"assignorId\": \"12345678000195\",\n  \"receivables\": [\n    {\n      \"externalId\": \"DM-HOMOLOG-IDEMP\",\n      \"type\": \"TRADE_BILL\",\n      \"debtor\": {\n        \"taxId\": \"88999000000198\",\n        \"name\": \"Sacado Homologacao Ltda\"\n      },\n      \"faceValue\": 1000000,\n      \"issueDate\": \"2026-10-01\",\n      \"dueDate\": \"2026-12-14\",\n      \"invoiceKey\": \"35261012345678000195550090011111111111111111\",\n      \"annualDiscountRateBasisPoints\": 2400\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/remessas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "remessas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "HU-02 · reenvio idempotente · mesma chave e mesmo corpo",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('201', () => pm.response.to.have.status(201));",
+              "pm.test('mesmo id do primeiro envio', () => pm.expect(pm.response.json().id).to.equal(pm.collectionVariables.get('idempotentBatchId')));",
+              "pm.test('header Idempotent-Replayed', () => pm.expect(pm.response.headers.get('Idempotent-Replayed')).to.equal('true'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "homolog-chave-001"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"assignorId\": \"12345678000195\",\n  \"receivables\": [\n    {\n      \"externalId\": \"DM-HOMOLOG-IDEMP\",\n      \"type\": \"TRADE_BILL\",\n      \"debtor\": {\n        \"taxId\": \"88999000000198\",\n        \"name\": \"Sacado Homologacao Ltda\"\n      },\n      \"faceValue\": 1000000,\n      \"issueDate\": \"2026-10-01\",\n      \"dueDate\": \"2026-12-14\",\n      \"invoiceKey\": \"35261012345678000195550090011111111111111111\",\n      \"annualDiscountRateBasisPoints\": 2400\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/remessas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "remessas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "HU-02 · conflito de idempotência · mesma chave e outro corpo",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('409 · problem+json', () => {",
+              "  pm.response.to.have.status(409);",
+              "  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/problem+json');",
+              "});",
+              "pm.test('code IDEMPOTENCY_KEY_CONFLICT', () => pm.expect(pm.response.json().code).to.equal('IDEMPOTENCY_KEY_CONFLICT'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "homolog-chave-001"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"assignorId\": \"12345678000195\",\n  \"receivables\": [\n    {\n      \"externalId\": \"DM-HOMOLOG-OUTRO\",\n      \"type\": \"TRADE_BILL\",\n      \"debtor\": {\n        \"taxId\": \"88999000000198\",\n        \"name\": \"Sacado Homologacao Ltda\"\n      },\n      \"faceValue\": 1000000,\n      \"issueDate\": \"2026-10-01\",\n      \"dueDate\": \"2026-12-14\",\n      \"invoiceKey\": \"35261012345678000195550090091111111111111111\",\n      \"annualDiscountRateBasisPoints\": 2400\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/remessas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "remessas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "HU-03 · RN-01 · cheque",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('201 · remessa recebida', () => pm.response.to.have.status(201));",
+              "const batchId = pm.response.json().id;",
+              "pm.sendRequest(pm.collectionVariables.get('baseUrl') + '/remessas/' + batchId + '/rejeicoes', (error, response) => {",
+              "  pm.test('rejeição do título 1 traz RN-01_UNSUPPORTED_RECEIVABLE_TYPE', () => {",
+              "    pm.expect(error).to.equal(null);",
+              "    const item = response.json().items.find((rejection) => rejection.position === 1);",
+              "    pm.expect(item, 'título 1 rejeitado').to.not.equal(undefined);",
+              "    pm.expect(item.reasons.map((reason) => reason.code)).to.eql([\"RN-01_UNSUPPORTED_RECEIVABLE_TYPE\"]);",
+              "  });",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"assignorId\": \"12345678000195\",\n  \"receivables\": [\n    {\n      \"externalId\": \"DM-HOMOLOG-0010\",\n      \"type\": \"CHECK\",\n      \"debtor\": {\n        \"taxId\": \"88999000000198\",\n        \"name\": \"Sacado Homologacao Ltda\"\n      },\n      \"faceValue\": 1000000,\n      \"issueDate\": \"2026-10-01\",\n      \"dueDate\": \"2026-12-14\",\n      \"annualDiscountRateBasisPoints\": 2400\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/remessas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "remessas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "HU-03 · RN-02 · vencido",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('201 · remessa recebida', () => pm.response.to.have.status(201));",
+              "const batchId = pm.response.json().id;",
+              "pm.sendRequest(pm.collectionVariables.get('baseUrl') + '/remessas/' + batchId + '/rejeicoes', (error, response) => {",
+              "  pm.test('rejeição do título 1 traz RN-02_RECEIVABLE_OVERDUE', () => {",
+              "    pm.expect(error).to.equal(null);",
+              "    const item = response.json().items.find((rejection) => rejection.position === 1);",
+              "    pm.expect(item, 'título 1 rejeitado').to.not.equal(undefined);",
+              "    pm.expect(item.reasons.map((reason) => reason.code)).to.eql([\"RN-02_RECEIVABLE_OVERDUE\"]);",
+              "  });",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"assignorId\": \"12345678000195\",\n  \"receivables\": [\n    {\n      \"externalId\": \"DM-HOMOLOG-0011\",\n      \"type\": \"TRADE_BILL\",\n      \"debtor\": {\n        \"taxId\": \"88999000000198\",\n        \"name\": \"Sacado Homologacao Ltda\"\n      },\n      \"faceValue\": 1000000,\n      \"issueDate\": \"2026-10-01\",\n      \"dueDate\": \"2026-10-10\",\n      \"invoiceKey\": \"35261012345678000195550090111111111111111111\",\n      \"annualDiscountRateBasisPoints\": 2400\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/remessas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "remessas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "HU-03 · RN-04 · duplicata sem nota fiscal",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('201 · remessa recebida', () => pm.response.to.have.status(201));",
+              "const batchId = pm.response.json().id;",
+              "pm.sendRequest(pm.collectionVariables.get('baseUrl') + '/remessas/' + batchId + '/rejeicoes', (error, response) => {",
+              "  pm.test('rejeição do título 1 traz RN-04_MISSING_INVOICE_EVIDENCE', () => {",
+              "    pm.expect(error).to.equal(null);",
+              "    const item = response.json().items.find((rejection) => rejection.position === 1);",
+              "    pm.expect(item, 'título 1 rejeitado').to.not.equal(undefined);",
+              "    pm.expect(item.reasons.map((reason) => reason.code)).to.eql([\"RN-04_MISSING_INVOICE_EVIDENCE\"]);",
+              "  });",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"assignorId\": \"12345678000195\",\n  \"receivables\": [\n    {\n      \"externalId\": \"DM-HOMOLOG-0012\",\n      \"type\": \"TRADE_BILL\",\n      \"debtor\": {\n        \"taxId\": \"88999000000198\",\n        \"name\": \"Sacado Homologacao Ltda\"\n      },\n      \"faceValue\": 1000000,\n      \"issueDate\": \"2026-10-01\",\n      \"dueDate\": \"2026-12-14\",\n      \"annualDiscountRateBasisPoints\": 2400\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/remessas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "remessas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "HU-03 · RN-02 · RN-04 · vencido e sem nota traz os dois motivos",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('201 · remessa recebida', () => pm.response.to.have.status(201));",
+              "const batchId = pm.response.json().id;",
+              "pm.sendRequest(pm.collectionVariables.get('baseUrl') + '/remessas/' + batchId + '/rejeicoes', (error, response) => {",
+              "  pm.test('rejeição do título 1 traz RN-02_RECEIVABLE_OVERDUE e RN-04_MISSING_INVOICE_EVIDENCE', () => {",
+              "    pm.expect(error).to.equal(null);",
+              "    const item = response.json().items.find((rejection) => rejection.position === 1);",
+              "    pm.expect(item, 'título 1 rejeitado').to.not.equal(undefined);",
+              "    pm.expect(item.reasons.map((reason) => reason.code)).to.eql([\"RN-02_RECEIVABLE_OVERDUE\",\"RN-04_MISSING_INVOICE_EVIDENCE\"]);",
+              "  });",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"assignorId\": \"12345678000195\",\n  \"receivables\": [\n    {\n      \"externalId\": \"DM-HOMOLOG-0013\",\n      \"type\": \"TRADE_BILL\",\n      \"debtor\": {\n        \"taxId\": \"88999000000198\",\n        \"name\": \"Sacado Homologacao Ltda\"\n      },\n      \"faceValue\": 1000000,\n      \"issueDate\": \"2026-10-01\",\n      \"dueDate\": \"2026-10-10\",\n      \"annualDiscountRateBasisPoints\": 2400\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/remessas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "remessas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "HU-04 · RN-05 · sacado com atraso de 10 dias é aceito",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('201 · remessa recebida', () => pm.response.to.have.status(201));",
+              "pm.test('1 título(s) aceito(s)', () => pm.expect(pm.response.json().totals.accepted).to.equal(1));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"assignorId\": \"12345678000195\",\n  \"receivables\": [\n    {\n      \"externalId\": \"DM-HOMOLOG-0014\",\n      \"type\": \"TRADE_BILL\",\n      \"debtor\": {\n        \"taxId\": \"22333444000181\",\n        \"name\": \"Sacado 10 dias\"\n      },\n      \"faceValue\": 1000000,\n      \"issueDate\": \"2026-10-01\",\n      \"dueDate\": \"2026-12-14\",\n      \"invoiceKey\": \"35261012345678000195550090141111111111111111\",\n      \"annualDiscountRateBasisPoints\": 2400\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/remessas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "remessas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "HU-04 · RN-05 · sacado com atraso de 20 dias",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('201 · remessa recebida', () => pm.response.to.have.status(201));",
+              "const batchId = pm.response.json().id;",
+              "pm.sendRequest(pm.collectionVariables.get('baseUrl') + '/remessas/' + batchId + '/rejeicoes', (error, response) => {",
+              "  pm.test('rejeição do título 1 traz RN-05_DEBTOR_IN_DEFAULT', () => {",
+              "    pm.expect(error).to.equal(null);",
+              "    const item = response.json().items.find((rejection) => rejection.position === 1);",
+              "    pm.expect(item, 'título 1 rejeitado').to.not.equal(undefined);",
+              "    pm.expect(item.reasons.map((reason) => reason.code)).to.eql([\"RN-05_DEBTOR_IN_DEFAULT\"]);",
+              "  });",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"assignorId\": \"12345678000195\",\n  \"receivables\": [\n    {\n      \"externalId\": \"DM-HOMOLOG-0015\",\n      \"type\": \"TRADE_BILL\",\n      \"debtor\": {\n        \"taxId\": \"33444555000181\",\n        \"name\": \"Sacado 20 dias\"\n      },\n      \"faceValue\": 1000000,\n      \"issueDate\": \"2026-10-01\",\n      \"dueDate\": \"2026-12-14\",\n      \"invoiceKey\": \"35261012345678000195550090151111111111111111\",\n      \"annualDiscountRateBasisPoints\": 2400\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/remessas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "remessas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "HU-05 · RN-06 · taxa de 16% a.a. abaixo de 120% do CDI",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('201 · remessa recebida', () => pm.response.to.have.status(201));",
+              "const batchId = pm.response.json().id;",
+              "pm.sendRequest(pm.collectionVariables.get('baseUrl') + '/remessas/' + batchId + '/rejeicoes', (error, response) => {",
+              "  pm.test('rejeição do título 1 traz RN-06_DISCOUNT_RATE_BELOW_MINIMUM', () => {",
+              "    pm.expect(error).to.equal(null);",
+              "    const item = response.json().items.find((rejection) => rejection.position === 1);",
+              "    pm.expect(item, 'título 1 rejeitado').to.not.equal(undefined);",
+              "    pm.expect(item.reasons.map((reason) => reason.code)).to.eql([\"RN-06_DISCOUNT_RATE_BELOW_MINIMUM\"]);",
+              "  });",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"assignorId\": \"12345678000195\",\n  \"receivables\": [\n    {\n      \"externalId\": \"DM-HOMOLOG-0016\",\n      \"type\": \"TRADE_BILL\",\n      \"debtor\": {\n        \"taxId\": \"88999000000198\",\n        \"name\": \"Sacado Homologacao Ltda\"\n      },\n      \"faceValue\": 1000000,\n      \"issueDate\": \"2026-10-01\",\n      \"dueDate\": \"2026-12-14\",\n      \"invoiceKey\": \"35261012345678000195550090161111111111111111\",\n      \"annualDiscountRateBasisPoints\": 1600\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/remessas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "remessas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "HU-06 · RN-07 · sacado acima de 4% do PL",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('201 · remessa recebida', () => pm.response.to.have.status(201));",
+              "const batchId = pm.response.json().id;",
+              "pm.sendRequest(pm.collectionVariables.get('baseUrl') + '/remessas/' + batchId + '/rejeicoes', (error, response) => {",
+              "  pm.test('rejeição do título 1 traz RN-07_DEBTOR_CONCENTRATION_EXCEEDED', () => {",
+              "    pm.expect(error).to.equal(null);",
+              "    const item = response.json().items.find((rejection) => rejection.position === 1);",
+              "    pm.expect(item, 'título 1 rejeitado').to.not.equal(undefined);",
+              "    pm.expect(item.reasons.map((reason) => reason.code)).to.eql([\"RN-07_DEBTOR_CONCENTRATION_EXCEEDED\"]);",
+              "  });",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"assignorId\": \"12345678000195\",\n  \"receivables\": [\n    {\n      \"externalId\": \"DM-HOMOLOG-0017\",\n      \"type\": \"TRADE_BILL\",\n      \"debtor\": {\n        \"taxId\": \"55666777000181\",\n        \"name\": \"Sacado no limite\"\n      },\n      \"faceValue\": 6000000,\n      \"issueDate\": \"2026-10-01\",\n      \"dueDate\": \"2026-12-14\",\n      \"invoiceKey\": \"35261012345678000195550090171111111111111111\",\n      \"annualDiscountRateBasisPoints\": 2400\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/remessas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "remessas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "HU-06 · RN-07 · filial conta no grupo do sacado",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('201 · remessa recebida', () => pm.response.to.have.status(201));",
+              "const batchId = pm.response.json().id;",
+              "pm.sendRequest(pm.collectionVariables.get('baseUrl') + '/remessas/' + batchId + '/rejeicoes', (error, response) => {",
+              "  pm.test('rejeição do título 1 traz RN-07_DEBTOR_CONCENTRATION_EXCEEDED', () => {",
+              "    pm.expect(error).to.equal(null);",
+              "    const item = response.json().items.find((rejection) => rejection.position === 1);",
+              "    pm.expect(item, 'título 1 rejeitado').to.not.equal(undefined);",
+              "    pm.expect(item.reasons.map((reason) => reason.code)).to.eql([\"RN-07_DEBTOR_CONCENTRATION_EXCEEDED\"]);",
+              "  });",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"assignorId\": \"12345678000195\",\n  \"receivables\": [\n    {\n      \"externalId\": \"DM-HOMOLOG-0018\",\n      \"type\": \"TRADE_BILL\",\n      \"debtor\": {\n        \"taxId\": \"55666777000262\",\n        \"name\": \"Filial\"\n      },\n      \"faceValue\": 6000000,\n      \"issueDate\": \"2026-10-01\",\n      \"dueDate\": \"2026-12-14\",\n      \"invoiceKey\": \"35261012345678000195550090181111111111111111\",\n      \"annualDiscountRateBasisPoints\": 2400\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/remessas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "remessas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "HU-06 · RN-08 · cedente acima de 7,5% do PL",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('201 · remessa recebida', () => pm.response.to.have.status(201));",
+              "const batchId = pm.response.json().id;",
+              "pm.sendRequest(pm.collectionVariables.get('baseUrl') + '/remessas/' + batchId + '/rejeicoes', (error, response) => {",
+              "  pm.test('rejeição do título 2 traz RN-08_ASSIGNOR_CONCENTRATION_EXCEEDED', () => {",
+              "    pm.expect(error).to.equal(null);",
+              "    const item = response.json().items.find((rejection) => rejection.position === 2);",
+              "    pm.expect(item, 'título 2 rejeitado').to.not.equal(undefined);",
+              "    pm.expect(item.reasons.map((reason) => reason.code)).to.eql([\"RN-08_ASSIGNOR_CONCENTRATION_EXCEEDED\"]);",
+              "  });",
+              "});",
+              "pm.test('o primeiro título entra', () => pm.expect(pm.response.json().totals.accepted).to.equal(1));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"assignorId\": \"11222333000181\",\n  \"receivables\": [\n    {\n      \"externalId\": \"DM-HOMOLOG-0019\",\n      \"type\": \"TRADE_BILL\",\n      \"debtor\": {\n        \"taxId\": \"88999000000198\",\n        \"name\": \"Sacado Homologacao Ltda\"\n      },\n      \"faceValue\": 4000000,\n      \"issueDate\": \"2026-10-01\",\n      \"dueDate\": \"2026-12-14\",\n      \"invoiceKey\": \"35261012345678000195550090191111111111111111\",\n      \"annualDiscountRateBasisPoints\": 2400\n    },\n    {\n      \"externalId\": \"DM-HOMOLOG-0020\",\n      \"type\": \"TRADE_BILL\",\n      \"debtor\": {\n        \"taxId\": \"88999000000198\",\n        \"name\": \"Sacado Homologacao Ltda\"\n      },\n      \"faceValue\": 4000000,\n      \"issueDate\": \"2026-10-01\",\n      \"dueDate\": \"2026-12-14\",\n      \"invoiceKey\": \"35261012345678000195550090201111111111111111\",\n      \"annualDiscountRateBasisPoints\": 2400\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/remessas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "remessas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "HU-07 · RN-09 · título já na carteira",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('201 · remessa recebida', () => pm.response.to.have.status(201));",
+              "const batchId = pm.response.json().id;",
+              "pm.sendRequest(pm.collectionVariables.get('baseUrl') + '/remessas/' + batchId + '/rejeicoes', (error, response) => {",
+              "  pm.test('rejeição do título 1 traz RN-09_DUPLICATE_RECEIVABLE', () => {",
+              "    pm.expect(error).to.equal(null);",
+              "    const item = response.json().items.find((rejection) => rejection.position === 1);",
+              "    pm.expect(item, 'título 1 rejeitado').to.not.equal(undefined);",
+              "    pm.expect(item.reasons.map((reason) => reason.code)).to.eql([\"RN-09_DUPLICATE_RECEIVABLE\"]);",
+              "  });",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"assignorId\": \"12345678000195\",\n  \"receivables\": [\n    {\n      \"externalId\": \"DM-2026-0001\",\n      \"type\": \"TRADE_BILL\",\n      \"debtor\": {\n        \"taxId\": \"88999000000198\",\n        \"name\": \"Sacado Homologacao Ltda\"\n      },\n      \"faceValue\": 1000000,\n      \"issueDate\": \"2026-10-01\",\n      \"dueDate\": \"2026-12-14\",\n      \"invoiceKey\": \"35261012345678000195550090211111111111111111\",\n      \"annualDiscountRateBasisPoints\": 2400\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/remessas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "remessas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "HU-07 · RN-09 · título repetido na mesma remessa",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('201 · remessa recebida', () => pm.response.to.have.status(201));",
+              "const batchId = pm.response.json().id;",
+              "pm.sendRequest(pm.collectionVariables.get('baseUrl') + '/remessas/' + batchId + '/rejeicoes', (error, response) => {",
+              "  pm.test('rejeição do título 2 traz RN-09_DUPLICATE_RECEIVABLE', () => {",
+              "    pm.expect(error).to.equal(null);",
+              "    const item = response.json().items.find((rejection) => rejection.position === 2);",
+              "    pm.expect(item, 'título 2 rejeitado').to.not.equal(undefined);",
+              "    pm.expect(item.reasons.map((reason) => reason.code)).to.eql([\"RN-09_DUPLICATE_RECEIVABLE\"]);",
+              "  });",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"assignorId\": \"12345678000195\",\n  \"receivables\": [\n    {\n      \"externalId\": \"DM-HOMOLOG-REPETIDO\",\n      \"type\": \"TRADE_BILL\",\n      \"debtor\": {\n        \"taxId\": \"88999000000198\",\n        \"name\": \"Sacado Homologacao Ltda\"\n      },\n      \"faceValue\": 1000000,\n      \"issueDate\": \"2026-10-01\",\n      \"dueDate\": \"2026-12-14\",\n      \"invoiceKey\": \"35261012345678000195550090221111111111111111\",\n      \"annualDiscountRateBasisPoints\": 2400\n    },\n    {\n      \"externalId\": \"DM-HOMOLOG-REPETIDO\",\n      \"type\": \"TRADE_BILL\",\n      \"debtor\": {\n        \"taxId\": \"88999000000198\",\n        \"name\": \"Sacado Homologacao Ltda\"\n      },\n      \"faceValue\": 1000000,\n      \"issueDate\": \"2026-10-01\",\n      \"dueDate\": \"2026-12-14\",\n      \"invoiceKey\": \"35261012345678000195550090231111111111111111\",\n      \"annualDiscountRateBasisPoints\": 2400\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/remessas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "remessas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "HU-08 · RN-03 · título de R$ 1 milhão a ~200 dias úteis",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('201 · remessa recebida', () => pm.response.to.have.status(201));",
+              "const batchId = pm.response.json().id;",
+              "pm.sendRequest(pm.collectionVariables.get('baseUrl') + '/remessas/' + batchId + '/rejeicoes', (error, response) => {",
+              "  pm.test('rejeição do título 1 traz RN-03_WEIGHTED_AVERAGE_TERM_EXCEEDED', () => {",
+              "    pm.expect(error).to.equal(null);",
+              "    const item = response.json().items.find((rejection) => rejection.position === 1);",
+              "    pm.expect(item, 'título 1 rejeitado').to.not.equal(undefined);",
+              "    pm.expect(item.reasons.map((reason) => reason.code)).to.eql([\"RN-03_WEIGHTED_AVERAGE_TERM_EXCEEDED\"]);",
+              "  });",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"assignorId\": \"12345678000195\",\n  \"receivables\": [\n    {\n      \"externalId\": \"DM-HOMOLOG-0024\",\n      \"type\": \"TRADE_BILL\",\n      \"debtor\": {\n        \"taxId\": \"99000111000165\",\n        \"name\": \"Sacado longo\"\n      },\n      \"faceValue\": 100000000,\n      \"issueDate\": \"2026-10-01\",\n      \"dueDate\": \"2027-08-04\",\n      \"invoiceKey\": \"35261012345678000195550090241111111111111111\",\n      \"annualDiscountRateBasisPoints\": 2400\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/remessas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "remessas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "HU-09 · remessa com 1 aceito e 2 rejeitados",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('201 com 1 aceito e 2 rejeitados', () => {",
+              "  pm.response.to.have.status(201);",
+              "  pm.expect(pm.response.json().totals).to.include({ accepted: 1, rejected: 2 });",
+              "});",
+              "pm.collectionVariables.set('batchWithRejections', pm.response.json().id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{$guid}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"assignorId\": \"12345678000195\",\n  \"receivables\": [\n    {\n      \"externalId\": \"DM-HOMOLOG-0025\",\n      \"type\": \"TRADE_BILL\",\n      \"debtor\": {\n        \"taxId\": \"88999000000198\",\n        \"name\": \"Sacado Homologacao Ltda\"\n      },\n      \"faceValue\": 1000000,\n      \"issueDate\": \"2026-10-01\",\n      \"dueDate\": \"2026-12-14\",\n      \"invoiceKey\": \"35261012345678000195550090251111111111111111\",\n      \"annualDiscountRateBasisPoints\": 2400\n    },\n    {\n      \"externalId\": \"DM-HOMOLOG-0026\",\n      \"type\": \"CHECK\",\n      \"debtor\": {\n        \"taxId\": \"88999000000198\",\n        \"name\": \"Sacado Homologacao Ltda\"\n      },\n      \"faceValue\": 1000000,\n      \"issueDate\": \"2026-10-01\",\n      \"dueDate\": \"2026-12-14\",\n      \"annualDiscountRateBasisPoints\": 2400\n    },\n    {\n      \"externalId\": \"DM-HOMOLOG-0027\",\n      \"type\": \"TRADE_BILL\",\n      \"debtor\": {\n        \"taxId\": \"88999000000198\",\n        \"name\": \"Sacado Homologacao Ltda\"\n      },\n      \"faceValue\": 1000000,\n      \"issueDate\": \"2026-10-01\",\n      \"dueDate\": \"2026-10-10\",\n      \"invoiceKey\": \"35261012345678000195550090271111111111111111\",\n      \"annualDiscountRateBasisPoints\": 2400\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/remessas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "remessas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "HU-09 · consulta das rejeições",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('200', () => pm.response.to.have.status(200));",
+              "pm.test('2 rejeições com posição, externalId e código RN-NN', () => {",
+              "  const items = pm.response.json().items;",
+              "  pm.expect(items.map((item) => item.position)).to.eql([2, 3]);",
+              "  items.forEach((item) => {",
+              "    pm.expect(item.externalId).to.be.a('string');",
+              "    item.reasons.forEach((reason) => pm.expect(reason.code).to.match(/^RN-\\d{2}_/));",
+              "  });",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/remessas/{{batchWithRejections}}/rejeicoes",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "remessas",
+            "{{batchWithRejections}}",
+            "rejeicoes"
+          ]
+        }
+      }
+    },
+    {
+      "name": "HU-09 · rejeições de remessa inexistente",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('404 · problem+json', () => {",
+              "  pm.response.to.have.status(404);",
+              "  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/problem+json');",
+              "});",
+              "pm.test('code BATCH_NOT_FOUND', () => pm.expect(pm.response.json().code).to.equal('BATCH_NOT_FOUND'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/remessas/00000000-0000-4000-8000-000000000000/rejeicoes",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "remessas",
+            "00000000-0000-4000-8000-000000000000",
+            "rejeicoes"
+          ]
+        }
+      }
+    }
+  ]
+}

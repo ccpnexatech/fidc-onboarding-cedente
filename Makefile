@@ -12,7 +12,7 @@ api:
 	@cd api && npm run -s build && npm start
 
 newman:
-	@echo "Disponível a partir da coleção do P2." && exit 1
+	@bash api/scripts/newman.sh
 
 docs:
 	@echo "Disponível ao fim do P2." && exit 1
