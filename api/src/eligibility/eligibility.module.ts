@@ -4,6 +4,9 @@ import { FundParameters } from './domain/entity/fund-parameters';
 import { AssignorRepository } from './domain/repository/assignor-repository';
 import { PortfolioRepository } from './domain/repository/portfolio-repository';
 import { EligibilityRule } from './domain/rule/eligibility-rule';
+import { AssignorConcentrationRule } from './domain/rule/portfolio/assignor-concentration.rule';
+import { DebtorConcentrationRule } from './domain/rule/portfolio/debtor-concentration.rule';
+import { WeightedAverageTermRule } from './domain/rule/portfolio/weighted-average-term.rule';
 import { DebtorInDefaultRule } from './domain/rule/receivable/debtor-in-default.rule';
 import { DuplicateReceivableRule } from './domain/rule/receivable/duplicate-receivable.rule';
 import { InvoiceEvidenceRule } from './domain/rule/receivable/invoice-evidence.rule';
@@ -35,7 +38,7 @@ export function receivableRules(): EligibilityRule[] {
 }
 
 export function portfolioRules(): EligibilityRule[] {
-  return [];
+  return [new DebtorConcentrationRule(), new AssignorConcentrationRule(), new WeightedAverageTermRule()];
 }
 
 @Module({
