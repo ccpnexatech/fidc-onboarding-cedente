@@ -8,6 +8,21 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: fidc
+          POSTGRES_PASSWORD: fidc
+          POSTGRES_DB: fidc
+        ports:
+          - 55432:5432
+        options: >-
+          --health-cmd "pg_isready -U fidc"
+          --health-interval 2s
+          --health-retries 30
+    env:
+      DATABASE_URL: postgresql://fidc:fidc@localhost:55432/fidc
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -18,6 +33,7 @@ jobs:
       - run: npm ci
         working-directory: api
       - run: make check
+      - run: make conciliacao
 
   homologacao:
     name: homologação (Newman)

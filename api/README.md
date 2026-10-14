@@ -11,15 +11,17 @@ Pronto quando: Swagger no ar, coleção Postman verde no CI e SQL gerando o rela
 | `openapi.yaml` (`POST /remessas`, `GET /remessas/{id}`, `GET /remessas/{id}/rejeicoes`, `Idempotency-Key`) | feito |
 | Mock aplicando as regras do P1 (RN-01 a RN-10) | feito |
 | Coleção Postman (29 casos) rodando via Newman no CI | feito |
-| SQL de conciliação remessa × custódia | a fazer |
+| SQL de conciliação remessa × custódia (`sql/`) | feito |
 | Diagrama de sequência e "melhorias propostas" | a fazer |
 
 ## Como rodar
 
 ```bash
-make setup   # instala as dependências da API
-make api     # compila e sobe o mock em http://localhost:3000 (Swagger em /docs)
-make check   # estrutura, ESLint, tipos, camadas, testes e lint do OpenAPI
+make setup        # instala as dependências da API e sobe o Postgres (docker compose)
+make api          # compila e sobe o mock em http://localhost:3000 (Swagger em /docs)
+make check        # estrutura, ESLint, tipos, camadas, testes e lint do OpenAPI
+make newman       # homologação: coleção Postman contra o mock recém-iniciado
+make conciliacao  # SQL de conciliação contra o Postgres
 ```
 
 Variáveis de ambiente:
@@ -30,6 +32,8 @@ Variáveis de ambiente:
 | `REFERENCE_DATE` | `2026-10-14` | Data de referência da cessão. Fixa por padrão para os testes serem reproduzíveis; `today` usa a data atual em São Paulo. |
 | `FUND_NET_ASSET_VALUE` | `5000000000` | PL de referência em centavos (R$ 50 milhões). |
 | `CDI_ANNUAL_RATE_BASIS_POINTS` | `1490` | CDI de referência (14,90% a.a.). |
+| `BATCH_REPOSITORY` | `memory` | `postgres` grava remessas e chaves de idempotência no Postgres (`sql/schema.sql`). |
+| `DATABASE_URL` | — | Conexão do Postgres. Com ela definida, os testes de integração no Postgres também rodam. |
 
 ## Arquitetura
 
@@ -71,4 +75,6 @@ Os títulos aceitos entram na carteira em memória. Remessas seguintes, no mesmo
 ## Testes
 
 - **Unit** (`src/**/*.spec.ts`): use cases e regras isolados, com as portas mockadas; um teste por cenário Gherkin.
-- **Integration** (`test/*.spec.ts`): a aplicação Nest inteira, com repositórios em memória e sem mocks, via HTTP (supertest).
+- **Integration** (`test/*.spec.ts`): a aplicação Nest inteira, sem mocks, via HTTP (supertest). Usa os repositórios em memória e, com `DATABASE_URL` definida, também o Postgres, incluindo a conciliação de ponta a ponta.
+- **Homologação** (`postman/`): coleção Postman com 29 casos, rodada pelo Newman no CI.
+- **SQL** (`sql/`): relatório de conciliação comparado com a saída esperada.

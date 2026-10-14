@@ -1,0 +1,13 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: fidc
+      POSTGRES_PASSWORD: fidc
+      POSTGRES_DB: fidc
+    ports:
+      - "55432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fidc"]
+      interval: 2s
+      retries: 30

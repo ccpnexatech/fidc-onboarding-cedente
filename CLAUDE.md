@@ -34,6 +34,7 @@ make setup     # instala dependências e sobe o Postgres
 make check     # lint + tipos + arquitetura + testes + lint OpenAPI (rodar antes de todo PR)
 make api       # sobe o mock da API e o Swagger em /docs
 make newman    # roda a coleção Postman
+make conciliacao  # testa o SQL de conciliação no Postgres
 make docs      # serve o site de documentação
 ```
 
