@@ -1,0 +1,20 @@
+- [Início](README.md)
+- [Premissas](premissas.md)
+- [Glossário](docs/glossario.md)
+- P1 · Discovery
+  - [AS-IS](docs/discovery/as-is.md)
+  - [Regras RN-01 a RN-10](docs/discovery/regras.md)
+  - [Histórias HU-01 a HU-11](docs/discovery/historias.md)
+  - [Backlog RICE e MoSCoW](docs/discovery/backlog.md)
+- P2 · API
+  - [Visão geral, arquitetura e melhorias](api/README.md)
+  - [Referência da API (Redoc)](site/api.html ':ignore')
+  - [Homologação Postman](api/postman/README.md)
+  - [Conciliação SQL](api/sql/README.md)
+- P3 · Gestão
+  - [Gestão](gestao/README.md)
+  - [Status 2026-10-14](gestao/status/2026-10-14.md)
+  - [Métricas](gestao/metricas.md)
+- [Decisões (ADRs)](decisoes/README.md)
+- [Diário](diario/2026-10-14.md)
+- [English](README.en.md)

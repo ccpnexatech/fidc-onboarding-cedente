@@ -19,5 +19,8 @@ newman:
 conciliacao:
 	@bash api/scripts/reconciliation-test.sh
 
+# Site de documentação (docsify) com a referência da API gerada do openapi.yaml.
 docs:
-	@echo "Disponível ao fim do P2." && exit 1
+	@cd api && npx redocly build-docs openapi.yaml -o ../site/api.html > /dev/null
+	@echo "Documentação em http://localhost:8000/site/"
+	@python3 -m http.server 8000 --bind 127.0.0.1

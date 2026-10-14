@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FIDC · Onboarding de cedentes</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify@4.13.1/lib/themes/vue.css">
+</head>
+<body>
+  <div id="app"></div>
+  <script>
+    window.$docsify = {
+      name: 'fidc-onboarding-cedente',
+      repo: 'https://github.com/ccpnexatech/fidc-onboarding-cedente',
+      basePath: '../',
+      homepage: 'README.md',
+      loadSidebar: '_sidebar.md',
+      alias: { '/_sidebar.md': '/site/_sidebar.md', '/.*/_sidebar.md': '/site/_sidebar.md' },
+      noEmoji: true,
+      subMaxLevel: 2,
+      search: { paths: 'auto', placeholder: 'Buscar' },
+      plugins: [
+        function (hook) {
+          hook.doneEach(function () {
+            document.querySelectorAll('pre[data-lang="mermaid"]').forEach(function (block) {
+              var diagram = document.createElement('div');
+              diagram.className = 'mermaid';
+              diagram.textContent = block.textContent;
+              block.replaceWith(diagram);
+            });
+            window.mermaid.run({ querySelector: '.mermaid' });
+          });
+        },
+      ],
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4.13.1/lib/docsify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4.13.1/lib/plugins/search.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+  <script>window.mermaid.initialize({ startOnLoad: false });</script>
+</body>
+</html>
