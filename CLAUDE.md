@@ -69,7 +69,7 @@ Herdados do itarget.backend e do mobile:
 - Exceção de domínio específica; a genérica vira 422.
 - Código e payload em inglês camelCase. Documentação em pt-BR (en auxiliar).
 - Unit com mocks de portas; Integration sem mocks (repositório Memory ou Postgres).
-- Comentários no código: **decisão pendente (ADR-0003)**.
+- Comentários no código: só `// RN-NN · <fonte>` onde a regra é aplicada (ADR-0003).
 
 ## Idioma
 

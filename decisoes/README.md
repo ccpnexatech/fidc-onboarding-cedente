@@ -5,8 +5,8 @@ Uma decisão por arquivo, `NNNN-titulo-em-kebab.md`. Regra: `.claude/rules/adr.m
 | ADR | Título | Status |
 |---|---|---|
 | [0001](0001-quadro-github-projects.md) | Quadro de entrega no GitHub Projects em vez de Jira | proposta |
-| 0002 | Stack do mock da API | pendente |
-| 0003 | Política de comentários no código | pendente |
+| [0002](0002-stack-do-mock.md) | Stack do mock: NestJS, TypeScript e Postgres | proposta |
+| [0003](0003-comentarios-no-codigo.md) | Comentários no código: só para rastrear regra e fonte | proposta |
 | [0004](0004-idioma.md) | Idioma: pt-BR principal, en auxiliar | aceita |
 | [0005](0005-hierarquia-das-fontes.md) | Hierarquia das fontes: norma é piso, regulamento restringe | aceita |
 | [0006](0006-regulamentos-modelo.md) | Regulamentos-modelo: BMA como base, Solis como complemento | proposta |
