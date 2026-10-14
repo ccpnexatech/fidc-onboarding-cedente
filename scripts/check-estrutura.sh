@@ -32,6 +32,21 @@ for entrada in diario/[0-9]*.md; do
   done
 done
 
+regras=docs/discovery/regras.md
+historias=docs/discovery/historias.md
+if [[ -f "$regras" && -f "$historias" ]]; then
+  for regra in $(grep -oE '^## RN-[0-9]{2}' "$regras" | cut -c4-); do
+    grep -qE "\| HU-[0-9]{2} .*${regra}" "$historias" || falhar "$regra não aparece em nenhuma história"
+  done
+  for historia in $(grep -oE '^## HU-[0-9]{2}' "$historias" | cut -c4-); do
+    sed -n "/^## ${historia} /,/^## HU-/p" "$historias" | grep -q '```gherkin' || falhar "$historia sem critérios em Gherkin"
+  done
+fi
+
+for link in $(grep -oE '\]\([0-9]{4}-[a-z0-9-]+\.md\)' decisoes/README.md | tr -d '()]'); do
+  [[ -f "decisoes/$link" ]] || falhar "índice aponta para ADR inexistente: $link"
+done
+
 if (( falhas > 0 )); then
   echo "$falhas falha(s)."
   exit 1
