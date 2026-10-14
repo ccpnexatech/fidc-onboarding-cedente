@@ -7,5 +7,6 @@ Uma decisão por arquivo, `NNNN-titulo-em-kebab.md`. Regra: `.claude/rules/adr.m
 | [0001](0001-quadro-github-projects.md) | Quadro de entrega no GitHub Projects em vez de Jira | proposta |
 | 0002 | Stack do mock da API | pendente |
 | 0003 | Política de comentários no código | pendente |
+| [0006](0006-regulamento-modelo-bma.md) | Regulamento-modelo: BMA FIDC Multissetorial | aceita |
 
 Status possíveis: `pendente` (decisão reservada, sem arquivo), `proposta` (opções escritas, falta o raciocínio do Caio), `aceita`, `substituída por NNNN`.
