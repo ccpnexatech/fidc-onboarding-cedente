@@ -1,0 +1,453 @@
+openapi: 3.0.3
+info:
+  title: API de remessa de recebíveis · FIDC simulado
+  version: 1.0.0
+  description: |
+    Contrato da API pela qual o cedente envia remessas de duplicatas ao FIDC simulado.
+
+    - Regras de elegibilidade: `docs/discovery/regras.md` (RN-01 a RN-10).
+    - Histórias: `docs/discovery/historias.md` (HU-01 a HU-11).
+    - Valores monetários em centavos (inteiro); datas em ISO 8601 (`YYYY-MM-DD`).
+    - Erros em `application/problem+json` (RFC 9457), com `code` estável.
+
+    Cenário fictício; nenhum dado real de cedente, sacado ou fundo.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+servers:
+  - url: http://localhost:3000
+    description: Mock local (`make api`)
+tags:
+  - name: Remessas
+    description: Envio e consulta de remessas de recebíveis.
+paths:
+  /remessas:
+    post:
+      tags: [Remessas]
+      operationId: createBatch
+      summary: Envia uma remessa de recebíveis (HU-01, HU-02)
+      description: |
+        Recebe a remessa, verifica se o cedente está habilitado (RN-10) e avalia cada título contra as regras RN-01 a RN-09.
+        Título rejeitado **não** falha a remessa: ela é recebida (201) e as rejeições ficam em `GET /remessas/{id}/rejeicoes`.
+
+        Idempotência: a mesma `Idempotency-Key` com o mesmo corpo devolve a resposta original (com o header `Idempotent-Replayed: true`); com corpo diferente, devolve 409.
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchRequest'
+            examples:
+              remessaValida:
+                summary: Duas duplicatas elegíveis
+                value:
+                  assignorId: '12345678000195'
+                  receivables:
+                    - externalId: DM-2026-0500
+                      type: TRADE_BILL
+                      debtor:
+                        taxId: '44555666000181'
+                        name: Comercial Sacado Exemplo Ltda
+                      faceValue: 1500000
+                      issueDate: '2026-10-01'
+                      dueDate: '2026-12-14'
+                      invoiceKey: '35261012345678000195550010000005001000005001'
+                      annualDiscountRateBasisPoints: 2400
+                    - externalId: DM-2026-0501
+                      type: SERVICE_BILL
+                      debtor:
+                        taxId: '66777888000181'
+                        name: Servicos Sacado Exemplo SA
+                      faceValue: 800000
+                      issueDate: '2026-10-05'
+                      dueDate: '2026-11-30'
+                      invoiceKey: '35261012345678000195550010000005011000005011'
+                      annualDiscountRateBasisPoints: 2200
+      responses:
+        '201':
+          description: Remessa recebida e processada.
+          headers:
+            Location:
+              description: URL da remessa criada.
+              schema:
+                type: string
+                example: /remessas/0b7f3c52-9d4e-4f61-a1c2-5e8d7f6a4b3c
+            Idempotent-Replayed:
+              description: '`true` quando a resposta é a do envio original (reenvio com a mesma chave e o mesmo corpo).'
+              schema:
+                type: string
+                enum: ['true']
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Batch'
+              examples:
+                processada:
+                  $ref: '#/components/examples/BatchProcessed'
+        '400':
+          description: Payload fora do contrato ou sem `Idempotency-Key`.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                payloadInvalido:
+                  summary: Campo obrigatório ausente
+                  value:
+                    type: https://fidc-onboarding-cedente.example/problemas/validation-error
+                    title: Payload fora do contrato
+                    status: 400
+                    detail: A remessa não segue o schema BatchRequest.
+                    code: VALIDATION_ERROR
+                    errors:
+                      - field: /receivables
+                        message: campo obrigatório ausente
+                semChave:
+                  summary: Header Idempotency-Key ausente
+                  value:
+                    type: https://fidc-onboarding-cedente.example/problemas/missing-idempotency-key
+                    title: Idempotency-Key ausente
+                    status: 400
+                    detail: O header Idempotency-Key é obrigatório em POST /remessas.
+                    code: MISSING_IDEMPOTENCY_KEY
+        '409':
+          description: A `Idempotency-Key` já foi usada com outro corpo.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                conflito:
+                  value:
+                    type: https://fidc-onboarding-cedente.example/problemas/idempotency-key-conflict
+                    title: Conflito de idempotência
+                    status: 409
+                    detail: A Idempotency-Key chave-001 já foi usada com um corpo diferente.
+                    code: IDEMPOTENCY_KEY_CONFLICT
+        '422':
+          description: Regra de negócio violada no lote inteiro (RN-10).
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                cedenteNaoHabilitado:
+                  value:
+                    type: https://fidc-onboarding-cedente.example/problemas/rn-10_assignor_not_enabled
+                    title: Cedente não habilitado
+                    status: 422
+                    detail: O cedente 98765432000198 está com status SUSPENDED.
+                    code: RN-10_ASSIGNOR_NOT_ENABLED
+  /remessas/{id}:
+    get:
+      tags: [Remessas]
+      operationId: getBatch
+      summary: Consulta uma remessa (HU-10)
+      parameters:
+        - $ref: '#/components/parameters/BatchId'
+      responses:
+        '200':
+          description: Remessa encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Batch'
+              examples:
+                processada:
+                  $ref: '#/components/examples/BatchProcessed'
+        '404':
+          $ref: '#/components/responses/BatchNotFound'
+  /remessas/{id}/rejeicoes:
+    get:
+      tags: [Remessas]
+      operationId: listBatchRejections
+      summary: Lista os títulos rejeitados de uma remessa (HU-09)
+      parameters:
+        - $ref: '#/components/parameters/BatchId'
+      responses:
+        '200':
+          description: Rejeições da remessa (lista vazia se todos foram aceitos).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RejectionList'
+              examples:
+                comRejeicoes:
+                  value:
+                    batchId: 0b7f3c52-9d4e-4f61-a1c2-5e8d7f6a4b3c
+                    items:
+                      - position: 2
+                        externalId: CH-2026-0001
+                        reasons:
+                          - code: RN-01_UNSUPPORTED_RECEIVABLE_TYPE
+                            rule: RN-01
+                            message: O tipo CHECK não é aceito pelo fundo.
+                      - position: 3
+                        externalId: DM-2026-0420
+                        reasons:
+                          - code: RN-02_RECEIVABLE_OVERDUE
+                            rule: RN-02
+                            message: Vencimento 2026-10-10 anterior à data de referência 2026-10-14.
+                          - code: RN-04_MISSING_INVOICE_EVIDENCE
+                            rule: RN-04
+                            message: Duplicata sem chave da nota fiscal (invoiceKey).
+        '404':
+          $ref: '#/components/responses/BatchNotFound'
+components:
+  parameters:
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      description: Identificador único do envio, gerado pelo cedente. Reenvios da mesma remessa usam a mesma chave.
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 100
+      example: 3f1d2c9e-remessa-2026-10-14-001
+    BatchId:
+      name: id
+      in: path
+      required: true
+      description: Identificador da remessa devolvido no envio.
+      schema:
+        type: string
+        format: uuid
+      example: 0b7f3c52-9d4e-4f61-a1c2-5e8d7f6a4b3c
+  responses:
+    BatchNotFound:
+      description: Remessa inexistente.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            naoEncontrada:
+              value:
+                type: https://fidc-onboarding-cedente.example/problemas/batch-not-found
+                title: Remessa não encontrada
+                status: 404
+                detail: Não existe remessa com id 00000000-0000-4000-8000-000000000000.
+                code: BATCH_NOT_FOUND
+  examples:
+    BatchProcessed:
+      summary: Remessa com dois títulos aceitos
+      value:
+        id: 0b7f3c52-9d4e-4f61-a1c2-5e8d7f6a4b3c
+        assignorId: '12345678000195'
+        referenceDate: '2026-10-14'
+        receivedAt: '2026-10-14T13:05:22.000Z'
+        status: PROCESSED
+        totals:
+          received: 2
+          accepted: 2
+          rejected: 0
+          acceptedFaceValue: 2300000
+        acceptedReceivables:
+          - position: 1
+            externalId: DM-2026-0500
+            debtorTaxId: '44555666000181'
+            faceValue: 1500000
+            dueDate: '2026-12-14'
+          - position: 2
+            externalId: DM-2026-0501
+            debtorTaxId: '66777888000181'
+            faceValue: 800000
+            dueDate: '2026-11-30'
+  schemas:
+    BatchRequest:
+      type: object
+      additionalProperties: false
+      required: [assignorId, receivables]
+      properties:
+        assignorId:
+          type: string
+          description: CNPJ do cedente, só dígitos (14).
+          pattern: '^[0-9]{14}$'
+        receivables:
+          type: array
+          minItems: 1
+          maxItems: 1000
+          items:
+            $ref: '#/components/schemas/ReceivableInput'
+    ReceivableInput:
+      type: object
+      additionalProperties: false
+      required: [externalId, type, debtor, faceValue, issueDate, dueDate, annualDiscountRateBasisPoints]
+      properties:
+        externalId:
+          type: string
+          description: Identificador do título no sistema do cedente (por exemplo, número da duplicata e parcela).
+          minLength: 1
+          maxLength: 60
+        type:
+          type: string
+          description: |
+            Tipo do título. O fundo simulado só aceita `TRADE_BILL` (duplicata mercantil) e `SERVICE_BILL` (duplicata de serviço);
+            os demais são reconhecidos pelo contrato e rejeitados pela RN-01.
+          enum: [TRADE_BILL, SERVICE_BILL, CHECK, BANK_CREDIT_NOTE, PROMISSORY_NOTE, COMMERCIAL_NOTE, CONTRACT]
+        debtor:
+          $ref: '#/components/schemas/Debtor'
+        faceValue:
+          type: integer
+          description: Valor de face em centavos.
+          minimum: 1
+        issueDate:
+          type: string
+          format: date
+        dueDate:
+          type: string
+          format: date
+        invoiceKey:
+          type: string
+          description: Chave de acesso da NF-e (44 dígitos). Obrigatória para duplicatas (RN-04).
+          pattern: '^[0-9]{44}$'
+        annualDiscountRateBasisPoints:
+          type: integer
+          description: Taxa de desconto anual em pontos-base (2400 = 24% a.a.). Mínimo de 120% do CDI (RN-06).
+          minimum: 0
+          maximum: 100000
+    Debtor:
+      type: object
+      additionalProperties: false
+      required: [taxId, name]
+      properties:
+        taxId:
+          type: string
+          description: CNPJ (14 dígitos) ou CPF (11 dígitos) do sacado, só dígitos e com dígito verificador válido.
+          pattern: '^([0-9]{11}|[0-9]{14})$'
+        name:
+          type: string
+          minLength: 1
+          maxLength: 120
+    Batch:
+      type: object
+      required: [id, assignorId, referenceDate, receivedAt, status, totals, acceptedReceivables]
+      properties:
+        id:
+          type: string
+          format: uuid
+        assignorId:
+          type: string
+        referenceDate:
+          type: string
+          format: date
+          description: Data da cessão usada para avaliar vencimento, atraso e prazo.
+        receivedAt:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [PROCESSED]
+        totals:
+          type: object
+          required: [received, accepted, rejected, acceptedFaceValue]
+          properties:
+            received:
+              type: integer
+            accepted:
+              type: integer
+            rejected:
+              type: integer
+            acceptedFaceValue:
+              type: integer
+              description: Soma do valor de face dos títulos aceitos, em centavos.
+        acceptedReceivables:
+          type: array
+          items:
+            $ref: '#/components/schemas/AcceptedReceivable'
+    AcceptedReceivable:
+      type: object
+      required: [position, externalId, debtorTaxId, faceValue, dueDate]
+      properties:
+        position:
+          type: integer
+          description: Posição do título no payload (começa em 1).
+        externalId:
+          type: string
+        debtorTaxId:
+          type: string
+        faceValue:
+          type: integer
+        dueDate:
+          type: string
+          format: date
+    RejectionList:
+      type: object
+      required: [batchId, items]
+      properties:
+        batchId:
+          type: string
+          format: uuid
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rejection'
+    Rejection:
+      type: object
+      required: [position, externalId, reasons]
+      properties:
+        position:
+          type: integer
+          description: Posição do título no payload (começa em 1).
+        externalId:
+          type: string
+        reasons:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/RejectionReason'
+    RejectionReason:
+      type: object
+      required: [code, rule, message]
+      properties:
+        code:
+          type: string
+          description: Código estável da regra violada.
+          enum:
+            - RN-01_UNSUPPORTED_RECEIVABLE_TYPE
+            - RN-02_RECEIVABLE_OVERDUE
+            - RN-03_WEIGHTED_AVERAGE_TERM_EXCEEDED
+            - RN-04_MISSING_INVOICE_EVIDENCE
+            - RN-05_DEBTOR_IN_DEFAULT
+            - RN-06_DISCOUNT_RATE_BELOW_MINIMUM
+            - RN-07_DEBTOR_CONCENTRATION_EXCEEDED
+            - RN-08_ASSIGNOR_CONCENTRATION_EXCEEDED
+            - RN-09_DUPLICATE_RECEIVABLE
+        rule:
+          type: string
+          pattern: '^RN-[0-9]{2}$'
+        message:
+          type: string
+    Problem:
+      type: object
+      description: Erro no formato RFC 9457 (problem+json).
+      required: [type, title, status, code]
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+        code:
+          type: string
+          description: Código estável do erro. Para causa de negócio, é o código da regra (`RN-NN_...`).
+        errors:
+          type: array
+          description: Detalhe da validação, quando o erro é 400 por payload fora do contrato.
+          items:
+            type: object
+            required: [field, message]
+            properties:
+              field:
+                type: string
+              message:
+                type: string
