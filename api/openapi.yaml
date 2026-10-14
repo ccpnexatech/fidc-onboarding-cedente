@@ -87,7 +87,7 @@ paths:
                 processada:
                   $ref: '#/components/examples/BatchProcessed'
         '400':
-          description: Payload fora do contrato ou sem `Idempotency-Key`.
+          description: Payload fora do contrato (`VALIDATION_ERROR`), JSON malformado (`MALFORMED_REQUEST`) ou sem `Idempotency-Key` (`MISSING_IDEMPOTENCY_KEY`).
           content:
             application/problem+json:
               schema:
@@ -135,7 +135,7 @@ paths:
               examples:
                 cedenteNaoHabilitado:
                   value:
-                    type: https://fidc-onboarding-cedente.example/problemas/rn-10_assignor_not_enabled
+                    type: https://fidc-onboarding-cedente.example/problemas/rn-10-assignor-not-enabled
                     title: Cedente não habilitado
                     status: 422
                     detail: O cedente 98765432000198 está com status SUSPENDED.
