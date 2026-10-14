@@ -4,19 +4,19 @@ Regra: `.claude/rules/requisitos.md`. Cada história vira uma issue com o label 
 
 ## Rastreabilidade
 
-| História | Papel | Regras | Endpoint |
-|---|---|---|---|
-| HU-01 · Enviar remessa pela API | cedente | RN-10 | `POST /remessas` |
-| HU-02 · Reenviar sem duplicar a cessão | cedente | RN-09 (indireta), PR-05 | `POST /remessas` |
-| HU-03 · Barrar título inválido na origem | analista da gestora | RN-01, RN-02, RN-04 | `POST /remessas` |
-| HU-04 · Barrar sacado inadimplente | analista da gestora | RN-05 | `POST /remessas` |
-| HU-05 · Garantir a taxa mínima | analista da gestora | RN-06 | `POST /remessas` |
-| HU-06 · Respeitar os limites de concentração | analista da gestora | RN-07, RN-08 | `POST /remessas` |
-| HU-07 · Impedir cessão em duplicidade | analista da gestora | RN-09 | `POST /remessas` |
-| HU-08 · Manter o prazo médio da carteira | analista da gestora | RN-03 | `POST /remessas` |
-| HU-09 · Consultar as rejeições | cedente | todas (consulta) | `GET /remessas/{id}/rejeicoes` |
-| HU-10 · Consultar a remessa | analista da gestora | — | `GET /remessas/{id}` |
-| HU-11 · Conciliar remessa e custódia | operação | — | SQL de conciliação |
+| História | Papel | Regras | Endpoint | Issue |
+|---|---|---|---|---|
+| HU-01 · Enviar remessa pela API | cedente | RN-10 | `POST /remessas` | [#7](https://github.com/ccpnexatech/fidc-onboarding-cedente/issues/7) |
+| HU-02 · Reenviar sem duplicar a cessão | cedente | RN-09 (indireta), PR-05 | `POST /remessas` | [#8](https://github.com/ccpnexatech/fidc-onboarding-cedente/issues/8) |
+| HU-03 · Barrar título inválido na origem | analista da gestora | RN-01, RN-02, RN-04 | `POST /remessas` | [#9](https://github.com/ccpnexatech/fidc-onboarding-cedente/issues/9) |
+| HU-04 · Barrar sacado inadimplente | analista da gestora | RN-05 | `POST /remessas` | [#10](https://github.com/ccpnexatech/fidc-onboarding-cedente/issues/10) |
+| HU-05 · Garantir a taxa mínima | analista da gestora | RN-06 | `POST /remessas` | [#11](https://github.com/ccpnexatech/fidc-onboarding-cedente/issues/11) |
+| HU-06 · Respeitar os limites de concentração | analista da gestora | RN-07, RN-08 | `POST /remessas` | [#12](https://github.com/ccpnexatech/fidc-onboarding-cedente/issues/12) |
+| HU-07 · Impedir cessão em duplicidade | analista da gestora | RN-09 | `POST /remessas` | [#13](https://github.com/ccpnexatech/fidc-onboarding-cedente/issues/13) |
+| HU-08 · Manter o prazo médio da carteira | analista da gestora | RN-03 | `POST /remessas` | [#14](https://github.com/ccpnexatech/fidc-onboarding-cedente/issues/14) |
+| HU-09 · Consultar as rejeições | cedente | todas (consulta) | `GET /remessas/{id}/rejeicoes` | [#15](https://github.com/ccpnexatech/fidc-onboarding-cedente/issues/15) |
+| HU-10 · Consultar a remessa | analista da gestora | — | `GET /remessas/{id}` | [#16](https://github.com/ccpnexatech/fidc-onboarding-cedente/issues/16) |
+| HU-11 · Conciliar remessa e custódia | operação | — | SQL de conciliação | [#17](https://github.com/ccpnexatech/fidc-onboarding-cedente/issues/17) |
 
 Toda RN aparece em ao menos uma HU.
 
