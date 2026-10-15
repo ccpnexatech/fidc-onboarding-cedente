@@ -23,6 +23,10 @@ for adr in decisoes/[0-9][0-9][0-9][0-9]-*.md; do
     grep -q "^$secao" "$adr" || falhar "$nome sem a seção '$secao'"
   done
   grep -q "${nome%%-*}" decisoes/README.md || falhar "$nome não está no índice decisoes/README.md"
+  if grep -q '^- \*\*Status:\*\* proposta' "$adr"; then
+    echo "AVISO: $nome em proposta: falta o raciocínio do Caio na seção Decisão"
+    [[ -n "${GITHUB_ACTIONS:-}" ]] && echo "::warning file=$adr,title=ADR em proposta::Falta o raciocínio do Caio na seção Decisão (.claude/rules/adr.md)."
+  fi
 done
 
 for entrada in diario/[0-9]*.md; do
