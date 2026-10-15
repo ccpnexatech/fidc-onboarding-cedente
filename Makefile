@@ -1,4 +1,4 @@
-.PHONY: check setup api newman conciliacao docs
+.PHONY: check setup api newman conciliacao docs diagramas
 
 # Estrutura do repositório + API: ESLint, tipos, dependency-cruiser, Jest e lint do OpenAPI.
 check:
@@ -25,3 +25,7 @@ docs:
 	@cd api && npx redocly build-docs openapi.yaml -o ../site/api.html > /dev/null
 	@echo "Documentação em http://localhost:8000/site/"
 	@python3 -m http.server 8000 --bind 127.0.0.1
+
+# Renderiza os diagramas Mermaid com o mermaid-cli (o CI roda em job separado).
+diagramas:
+	@bash scripts/check-diagramas.sh

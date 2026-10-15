@@ -6,3 +6,4 @@ dist/
 coverage/
 reports/
 site/api.html
+_site/

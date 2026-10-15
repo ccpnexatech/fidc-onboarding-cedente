@@ -22,6 +22,8 @@ Hoje (AS-IS simulado) o cedente envia a carteira de recebíveis por planilha, po
 
 ## Em 5 minutos
 
+Tudo abaixo também está no site publicado: [ccpnexatech.github.io/fidc-onboarding-cedente](https://ccpnexatech.github.io/fidc-onboarding-cedente/). A referência da API, gerada do `openapi.yaml`, fica em [`site/api.html`](https://ccpnexatech.github.io/fidc-onboarding-cedente/site/api.html).
+
 1. **O problema e o processo atual:** [`docs/discovery/as-is.md`](docs/discovery/as-is.md), com 9 pontos de falha e o TO-BE.
 2. **As regras e de onde vêm:** [`docs/discovery/regras.md`](docs/discovery/regras.md). São 10 regras, cada uma ligada a uma cláusula da CVM 175 ou de um regulamento real, com o código de rejeição que a API devolve.
 3. **Por que essas fontes:**

@@ -34,6 +34,8 @@ The outcome is rework, concentration limits found too late, receivables assigned
 
 ## In five minutes
 
+Everything below is also on the published site: [ccpnexatech.github.io/fidc-onboarding-cedente](https://ccpnexatech.github.io/fidc-onboarding-cedente/). The API reference, generated from `openapi.yaml`, is at [`site/api.html`](https://ccpnexatech.github.io/fidc-onboarding-cedente/site/api.html).
+
 1. **AS-IS and failure points:** `docs/discovery/as-is.md`.
 2. **Business rules and their sources:** [`docs/en/business-rules.md`](docs/en/business-rules.md). There are 10 rules, each traced to CVM Resolution 175 or to a real fund regulation, with the stable rejection code the API returns.
 3. **Why those sources:**
