@@ -7,6 +7,8 @@ services:
       POSTGRES_DB: fidc
     ports:
       - "55432:5432"
+    volumes:
+      - ./api/sql/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U fidc"]
       interval: 2s
