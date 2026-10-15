@@ -1,6 +1,6 @@
 # Regra · Arquitetura do mock (`api/`)
 
-Vale a partir da ADR-0002 (stack do mock). Até lá, os princípios abaixo orientam a escolha.
+Stack: ADR-0002 (NestJS, TypeScript, Postgres opcional).
 
 - Um módulo por contexto (`batch`, `eligibility`, `reconciliation`), cada um com `domain/` e `infrastructure/`.
 - `domain/` não importa nada de `infrastructure/` nem de framework. As camadas são travadas por dependency-cruiser no CI.
@@ -9,4 +9,4 @@ Vale a partir da ADR-0002 (stack do mock). Até lá, os princípios abaixo orien
 - Sem métodos estáticos, sem valor sentinela no lugar de `null`, sem abreviações em nomes.
 - Exceção de domínio é específica (`DueDateTooShortException`); exceção de domínio genérica vira 422.
 - Código e payload em inglês camelCase; termos conforme `docs/glossario.md`.
-- Comentários no código: decisão pendente (ADR-0003). Até lá, não adicionar comentários além do necessário para explicar uma regra `RN-NN`.
+- Comentários no código (ADR-0003): só `// RN-NN · <fonte>` no ponto onde a regra é aplicada. Explicação de negócio fica em `docs/discovery/regras.md`.
