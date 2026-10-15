@@ -3,6 +3,7 @@
 # Estrutura do repositório + API: ESLint, tipos, dependency-cruiser, Jest e lint do OpenAPI.
 check:
 	@bash scripts/check-estrutura.sh
+	@bash scripts/test-automacao.sh
 	@cd api && npm run -s check
 
 setup:

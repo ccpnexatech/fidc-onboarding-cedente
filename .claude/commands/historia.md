@@ -9,5 +9,5 @@ Transforme "$ARGUMENTS" em uma história seguindo `.claude/rules/requisitos.md`.
 2. Se a necessidade exigir uma regra que ainda não existe em `docs/discovery/regras.md`, pare e leve ao portão de decisão antes de criar a issue.
 3. Mostre o texto ao Caio e espere aprovação.
 4. Com aprovação, crie a issue usando o template "História" (`gh issue create --template historia.md`), com o label `historia`.
-5. Adicione a issue ao GitHub Project do repo na coluna Todo (`gh project item-add`).
+5. Confira que a issue entrou no GitHub Project em Todo. O workflow `quadro` faz isso ao abrir a issue (ADR-0007).
 6. Responda com o número da issue e o link.

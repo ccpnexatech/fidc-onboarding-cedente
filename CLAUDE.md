@@ -22,7 +22,7 @@ Não é portão: formatação, nomes internos óbvios e correções que já segu
 issue (história) → branch tipo/<nº-issue>-descricao → commits → gh pr create → revisão do Caio → merge → card "Done"
 ```
 
-- Quadro: GitHub Project vinculado ao repo (Todo → In progress → Review → Done, WIP 2).
+- Quadro: GitHub Project vinculado ao repo (Todo → In progress → Review → Done, WIP 2). O card anda sozinho pela branch, pelo PR e pelo merge (ADR-0007).
 - Uma issue = uma história ou tarefa, com critérios de aceite em Gherkin.
 - PR: "o que / por que / como validei" + `Closes #N`.
 - Commits: Conventional Commits em pt-BR, minúsculo, sem ponto final. Tipos: `feat fix refactor docs test chore ci`.
