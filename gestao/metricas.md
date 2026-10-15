@@ -41,4 +41,8 @@ Horários em UTC.
 A regra define lead time como **merge − entrada em In progress**. A API do GitHub Projects não guarda o histórico de colunas: a linha do tempo da issue não traz mudança de status de um Project v2 movido por API. Testei em 2026-10-14 e a consulta voltou vazia.
 
 - **Até aqui:** a entrada em In progress foi aproximada pelo **primeiro commit do PR**. Como cada PR foi construído e commitado de uma vez, o primeiro commit coincide com a abertura do PR. Por isso a coluna "Início → PR" dá 0,0, mesmo havendo trabalho antes do commit. O número subestima o tempo de construção.
-- **Daqui em diante:** cards movidos com `gestao/quadro.sh <issue> <status>` ficam registrados em `gestao/quadro.csv` (instante, issue, status). Esse log é a fonte da entrada em In progress, e o `metricas.sh` pode passar a lê-lo.
+- **Daqui em diante** ([ADR-0007](../decisoes/0007-automacao-do-fluxo.md)): cada mudança de coluna vira um comentário na issue, feito pelo workflow `quadro` ou pelo `quadro.sh`. O `metricas.sh` lê o início do lead time nesta ordem:
+  1. o comentário na issue;
+  2. a linha em `gestao/quadro.csv`, o registro manual até 2026-10-15;
+  3. o primeiro commit do PR, só como último recurso.
+  - A coluna "Fonte do início" diz qual das três foi usada.

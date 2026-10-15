@@ -1,0 +1,27 @@
+name: quadro
+
+# Move o card no GitHub Project conforme a branch, o PR e a issue (ADR-0007).
+on:
+  create:
+  pull_request:
+    types: [opened, reopened, ready_for_review]
+  issues:
+    types: [opened, reopened, closed]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: quadro-${{ github.event.issue.number || github.event.pull_request.number || github.ref }}
+
+jobs:
+  mover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash gestao/quadro-evento.sh "$GITHUB_EVENT_NAME" "$GITHUB_EVENT_PATH"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PROJECT_TOKEN: ${{ secrets.PROJECT_TOKEN }}
+          REPO: ${{ github.repository }}
