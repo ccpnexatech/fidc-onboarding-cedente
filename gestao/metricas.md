@@ -30,8 +30,9 @@ _Gerado em 2026-10-15 por `gestao/metricas.sh`._
 | #21 | P3 · Gestão: status report, métricas de fluxo e tradução en | #28 | 2026-10-14T21:20 | 1º commit | 2026-10-14T21:20 | 2026-10-15T14:04 | 0,0 | 16,7 |
 | #30 | P3 · Quadro automático: card segue branch, PR e merge | #34 | 2026-10-15T17:38 | quadro.csv | 2026-10-15T17:41 | 2026-10-15T17:45 | 0,1 | 0,1 |
 | #31 | P3 · CI valida PR, commits e ADRs pendentes | #35 | 2026-10-15T17:46 | comentário | 2026-10-15T17:48 | 2026-10-15T17:52 | 0,0 | 0,1 |
-| #32 | P3 · Status report e métricas semanais automáticos | — | — | — | — | — | — | — |
+| #32 | P3 · Status report e métricas semanais automáticos | #36 | 2026-10-15T17:52 | comentário | 2026-10-15T17:56 | 2026-10-15T18:00 | 0,1 | 0,1 |
 | #33 | P3 · Publicar site e referência da API no GitHub Pages | — | — | — | — | — | — | — |
+| #38 | Quadro falha em PR sem issue ligada | #39 | 2026-10-15T18:06 | comentário | 2026-10-15T18:07 | 2026-10-15T18:11 | 0,0 | 0,1 |
 <!-- metricas:fim -->
 
 Horários em UTC.
