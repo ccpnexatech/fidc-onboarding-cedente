@@ -27,10 +27,10 @@ make conciliacao   # schema + dados de teste + relatório, comparado com expecte
 
 O teste roda em um schema temporário e o apaga no fim. No CI, o job `check` sobe um Postgres como serviço e roda `make conciliacao`.
 
-Para conciliar remessas reais do mock:
+Para conciliar remessas reais do mock, o `make setup` sobe o Postgres já com o `schema.sql` aplicado (montado em `docker-entrypoint-initdb.d`, que roda na criação do container):
 
 ```bash
-psql postgresql://fidc:fidc@localhost:55432/fidc -f api/sql/schema.sql
+make setup
 BATCH_REPOSITORY=postgres DATABASE_URL=postgresql://fidc:fidc@localhost:55432/fidc make api
 # envie remessas, carregue a posição do custodiante em custody_position e rode:
 psql postgresql://fidc:fidc@localhost:55432/fidc -f api/sql/reconciliation.sql
