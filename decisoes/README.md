@@ -1,6 +1,6 @@
 # Decisões (ADRs)
 
-Uma decisão por arquivo, `NNNN-titulo-em-kebab.md`. Regra: `.claude/rules/adr.md`. Criar com `/adr <título>`.
+Registro das decisões de arquitetura e de produto (ADRs). Cada arquivo `NNNN-titulo.md` traz problema, opções, decisão e consequências. Convenções em [`.claude/rules/adr.md`](../.claude/rules/adr.md).
 
 | ADR | Título | Status |
 |---|---|---|

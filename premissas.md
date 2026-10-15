@@ -1,6 +1,6 @@
 # Premissas
 
-Suposições sobre o FIDC simulado. Cada uma tem um jeito de ser validada e um status. Quando uma premissa cai, a mudança vira ADR.
+Suposições sobre a operação do FIDC simulado, cada uma com método de validação e status. A premissa invalidada gera uma ADR com a mudança decorrente.
 
 | # | Premissa | Por que importa | Como validar | Status |
 |---|---|---|---|---|

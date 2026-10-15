@@ -1,3 +1,3 @@
 # Diário de bordo
 
-Uma entrada por sessão, em `AAAA-MM-DD.md`. Regra: `.claude/rules/diario.md`. Abrir e fechar com `/diario`.
+Registro das sessões de trabalho, um arquivo por dia (`AAAA-MM-DD.md`), com três seções: hipótese, descoberta e próxima dúvida. Convenções em [`.claude/rules/diario.md`](../.claude/rules/diario.md).
