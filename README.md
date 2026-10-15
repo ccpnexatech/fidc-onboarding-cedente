@@ -14,7 +14,7 @@ Hoje (AS-IS simulado) o cedente envia a carteira de recebíveis por planilha, po
 
 | Fase | Entrega | Pasta | Status |
 |---|---|---|---|
-| P1 | Discovery: AS-IS, regras de elegibilidade, histórias com Gherkin, backlog RICE/MoSCoW | `docs/discovery/` | a fazer |
+| P1 | Discovery: AS-IS, regras de elegibilidade, histórias com Gherkin, backlog RICE/MoSCoW | `docs/discovery/` | feito |
 | P2 | API de remessa (OpenAPI), mock, coleção Postman/Newman em CI, SQL de conciliação | `api/` | a fazer |
 | P3 | Quadro de entrega (GitHub Projects), status reports semanais, lead time | `gestao/` | a fazer |
 
