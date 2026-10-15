@@ -12,3 +12,4 @@
 <!-- Outros passos: casos Postman, consulta SQL, leitura cruzada com as regras RN-NN. -->
 
 Closes #
+<!-- Ou "Refs #N" quando não fecha a issue; ou "Sem issue: <motivo>" (por exemplo, ADR do portão). O CI cobra uma das três. -->
