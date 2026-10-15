@@ -9,7 +9,7 @@ Pronto quando: Swagger no ar, coleção Postman verde no CI e SQL gerando o rela
 | Item | Status |
 |---|---|
 | `openapi.yaml` (`POST /remessas`, `GET /remessas/{id}`, `GET /remessas/{id}/rejeicoes`, `Idempotency-Key`) | feito |
-| Mock aplicando as regras do P1 | em andamento |
+| Mock aplicando as regras do P1 (RN-01 a RN-10) | feito |
 | Coleção Postman (15+ casos) rodando via Newman no CI | a fazer |
 | SQL de conciliação remessa × custódia | a fazer |
 | Diagrama de sequência e "melhorias propostas" | a fazer |
