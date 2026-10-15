@@ -47,6 +47,15 @@ for link in $(grep -oE '\]\([0-9]{4}-[a-z0-9-]+\.md\)' decisoes/README.md | tr -
   [[ -f "decisoes/$link" ]] || falhar "índice aponta para ADR inexistente: $link"
 done
 
+colecao=api/postman/fidc-remessa.postman_collection.json
+if [[ -f "$colecao" ]]; then
+  nomeados=$(grep -cE '^      "name": "HU-[0-9]{2} · ' "$colecao" || true)
+  (( nomeados >= 15 )) || falhar "coleção Postman com menos de 15 casos nomeados HU-NN · ... ($nomeados)"
+  for regra in $(grep -oE '^## RN-[0-9]{2}' "$regras" | cut -c4-); do
+    grep -qE "\"name\": \"HU-[0-9]{2} · .*${regra}" "$colecao" || falhar "$regra sem caso na coleção Postman"
+  done
+fi
+
 if (( falhas > 0 )); then
   echo "$falhas falha(s)."
   exit 1
