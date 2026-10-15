@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Testa os scripts de automação do fluxo (ADR-0007) com eventos e PRs simulados, sem chamar o GitHub.
+# Testa os scripts de automação do fluxo (ADR-0007) com eventos, PRs e semanas simulados, sem chamar o GitHub.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -68,6 +68,31 @@ esperar "corpo sem seções e sem issue falha" "FALHA: corpo do PR sem a seção
 FALHA: corpo do PR sem a seção '## Como validei' (.github/pull_request_template.md)
 FALHA: corpo do PR sem 'Closes #N' ('Refs #N' quando não fecha; 'Sem issue: <motivo>' quando não há issue)" \
   "$(pr "chore: ajusta" '## O que\nsó isso' "chore: ajusta")"
+
+status() { # <JSON> → status report
+  python3 -I gestao/status.py <<< "$1"
+}
+semana='{"data":"2026-10-19","desde":"2026-10-12","ciMain":"failure",
+  "mergeados":[{"number":40,"title":"feat: algo","body":"Closes #36\ncloses #37"},{"number":39,"title":"docs: x","body":null}],
+  "abertos":[{"number":41,"createdAt":"2026-10-14T10:00:00Z"},{"number":42,"createdAt":"2026-10-18T10:00:00Z"}],
+  "itens":[{"number":36,"title":"A","status":"Done"},{"number":37,"title":"B","status":"In progress"},
+           {"number":38,"title":"C","status":"In progress"},{"number":43,"title":"D","status":"In progress"},
+           {"number":44,"title":"E","status":"Todo"},{"number":45,"title":"F","status":"Review"}],
+  "adrsEmProposta":["0007"],"premissasAValidar":[]}'
+relatorio=$(status "$semana")
+esperar "status: Feito lista PR com as issues que fechou" "- #39 docs: x
+- #40 feat: algo (fecha #36, #37)" "$(sed -n '/^## Feito/,/^## Riscos/p' <<< "$relatorio" | grep '^- ')"
+esperar "status: riscos de CI, WIP, PR parado e ADR, sem premissa" "| CI vermelho na \`main\`
+| WIP estourado: 3 itens em In progress (limite 2)
+| PR aberto há mais de 3 dias: #41
+| ADRs em \`proposta\`: 0007" "$(grep -oE '^\| [^|]+' <<< "$relatorio" | grep -vE '^\| (Risco|---)' | sed 's/ $//')"
+esperar "status: Próximo em ordem Review, In progress, Todo" "- #45 F (Review)
+- #37 B (In progress)
+- #38 C (In progress)
+- #43 D (In progress)
+- #44 E (Todo)" "$(sed -n '/^## Próximo/,$p' <<< "$relatorio" | grep '^- ')"
+esperar "status: semana sem risco nos dados" "Nenhum risco nos dados do quadro e do repositório." \
+  "$(status '{"data":"2026-10-19","desde":"2026-10-12","ciMain":"success","mergeados":[],"abertos":[],"itens":[],"adrsEmProposta":[],"premissasAValidar":[]}' | sed -n '/^## Riscos/,/^## Próximo/p' | sed -n 3p)"
 
 if (( falhas > 0 )); then
   echo "$falhas teste(s) de automação falharam."
