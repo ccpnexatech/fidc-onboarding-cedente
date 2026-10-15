@@ -1,39 +1,35 @@
-# P2 · API de remessa de recebíveis
+# API de remessa de recebíveis
 
-Regras: `.claude/rules/arquitetura.md`, `api.md`, `testes.md`.
+Mock da API que recebe remessas de recebíveis, aplica as regras de elegibilidade RN-01 a RN-10 ([`docs/discovery/regras.md`](../docs/discovery/regras.md)) e expõe o resultado por título. O contrato é [`openapi.yaml`](openapi.yaml); a referência publicada está em [site/api.html](https://ccpnexatech.github.io/fidc-onboarding-cedente/site/api.html).
 
-Construído a partir de `docs/discovery/`. Stack: ADR-0002 (NestJS, TypeScript, Postgres opcional).
-
-Pronto quando: Swagger no ar, coleção Postman verde no CI e SQL gerando o relatório de divergências. O Swagger sobe com o mock em `/docs`; publicar um ambiente público fica a cargo do Caio (ver `gestao/status/2026-10-14.md`).
-
-| Item | Status |
+| Endpoint | Função |
 |---|---|
-| `openapi.yaml` (`POST /remessas`, `GET /remessas/{id}`, `GET /remessas/{id}/rejeicoes`, `Idempotency-Key`) | feito |
-| Mock aplicando as regras do P1 (RN-01 a RN-10) | feito |
-| Coleção Postman (29 casos) rodando via Newman no CI | feito |
-| SQL de conciliação remessa × custódia (`sql/`) | feito |
-| Diagrama de sequência e "melhorias propostas" (abaixo) | feito |
+| `POST /remessas` | Recebe a remessa. Exige `Idempotency-Key`. Responde `201` com a decisão por título, `400` para payload fora do contrato, `409` para conflito de idempotência e `422` para cedente não habilitado. |
+| `GET /remessas/{id}` | Consulta a remessa e os totais. |
+| `GET /remessas/{id}/rejeicoes` | Lista os títulos rejeitados e os códigos das regras violadas. |
 
-## Como rodar
+Stack: NestJS 11, TypeScript e Ajv, com PostgreSQL opcional ([ADR-0002](../decisoes/0002-stack-do-mock.md)).
+
+## Execução
 
 ```bash
-make setup        # instala as dependências da API e sobe o Postgres (docker compose)
+make setup        # instala as dependências e sobe o PostgreSQL com o schema aplicado
 make api          # compila e sobe o mock em http://localhost:3000 (Swagger em /docs)
+make newman       # executa a coleção de homologação contra um mock recém-iniciado
+make conciliacao  # executa o SQL de conciliação no PostgreSQL
 make check        # estrutura, ESLint, tipos, camadas, testes e lint do OpenAPI
-make newman       # homologação: coleção Postman contra o mock recém-iniciado
-make conciliacao  # SQL de conciliação contra o Postgres
 ```
 
-Variáveis de ambiente:
+## Configuração
 
 | Variável | Padrão | Uso |
 |---|---|---|
 | `PORT` | `3000` | Porta HTTP. |
-| `REFERENCE_DATE` | `2026-10-14` | Data de referência da cessão. Fixa por padrão para os testes serem reproduzíveis; `today` usa a data atual em São Paulo. |
-| `FUND_NET_ASSET_VALUE` | `5000000000` | PL de referência em centavos (R$ 50 milhões). |
+| `REFERENCE_DATE` | `2026-10-14` | Data de referência da cessão. É fixa por padrão para que os testes sejam reproduzíveis. `today` usa a data corrente em São Paulo. |
+| `FUND_NET_ASSET_VALUE` | `5000000000` | PL de referência, em centavos (R$ 50 milhões). |
 | `CDI_ANNUAL_RATE_BASIS_POINTS` | `1490` | CDI de referência (14,90% a.a.). |
-| `BATCH_REPOSITORY` | `memory` | `postgres` grava remessas e chaves de idempotência no Postgres (`sql/schema.sql`). |
-| `DATABASE_URL` | — | Conexão do Postgres. Com ela definida, os testes de integração no Postgres também rodam. |
+| `BATCH_REPOSITORY` | `memory` | `postgres` grava remessas e chaves de idempotência no PostgreSQL ([`sql/schema.sql`](sql/schema.sql)). |
+| `DATABASE_URL` | — | Conexão com o PostgreSQL. Quando definida, os testes de integração também rodam contra o banco. |
 
 ## Arquitetura
 
@@ -48,8 +44,8 @@ src/
     └── infrastructure/    controller HTTP, repositórios em memória, adaptador para o módulo eligibility
 ```
 
-- `domain/` não importa `infrastructure/`, framework nem o `domain` de outro módulo. O dependency-cruiser trava isso no `make check`.
-- A composição fica só nos `*.module.ts`; o controller recebe os use cases prontos.
+- `domain/` não importa `infrastructure/`, framework nem o `domain` de outro módulo. O dependency-cruiser bloqueia a violação no `make check`.
+- A composição fica nos `*.module.ts`. O controller recebe os use cases prontos.
 - O módulo `batch` fala com `eligibility` pela porta `EligibilityGateway` (`batch/domain/service`). O adaptador fica em `batch/infrastructure/service`.
 - O corpo de `POST /remessas` é validado contra o schema `BatchRequest` do próprio `openapi.yaml` (Ajv), mais o dígito verificador de CNPJ e CPF. Mudar o payload exige mudar o contrato primeiro.
 - Cada regra `RN-NN` é aplicada em um único ponto, marcado com `// RN-NN · <fonte>` (ADR-0003).
@@ -70,7 +66,7 @@ A carteira inicial fica em `src/eligibility/infrastructure/seed/portfolio-seed.j
 | Sacado `22333444000181` | título vencido há 10 dias | RN-05 (HU-04) |
 | Sacado `33444555000181` | título vencido há 20 dias | RN-05 (HU-04) |
 
-Os títulos aceitos entram na carteira em memória. Remessas seguintes, no mesmo processo, enxergam a nova exposição. Reiniciar o mock volta à carteira inicial.
+Os títulos aceitos entram na carteira em memória, e as remessas seguintes no mesmo processo consideram a nova exposição. Reiniciar o mock restaura a carteira inicial.
 
 ## Testes
 
@@ -120,16 +116,20 @@ sequenceDiagram
 
 ## Melhorias propostas
 
-O que o mock simplifica e o que mudaria em produção, em ordem de risco para o fundo:
+Simplificações do mock e o tratamento esperado em produção, em ordem de risco para o fundo:
 
 | # | Melhoria | Por que importa | Onde entra |
 |---|---|---|---|
-| M-01 | **Concorrência na carteira.** Hoje a exposição é lida, avaliada e gravada sem trava; duas remessas simultâneas do mesmo sacado podem, juntas, passar do limite de 4%. | Desenquadramento silencioso (F-02). | Reserva de limite com transação serializável ou fila por sacado/cedente. |
+| M-01 | **Concorrência na carteira.** A exposição é lida, avaliada e gravada sem trava. Duas remessas simultâneas do mesmo sacado podem, juntas, ultrapassar o limite de 4%. | Desenquadramento silencioso (F-02). | Reserva de limite com transação serializável ou fila por sacado/cedente. |
 | M-02 | **Autenticação e autorização.** O mock não autentica; o `assignorId` vem no corpo. | Um cedente poderia enviar remessa em nome de outro. | OAuth2 client credentials com o CNPJ do cedente no token; o `assignorId` do corpo precisa bater com o do token. |
 | M-03 | **Grupo econômico real.** A raiz do CNPJ só pega matriz e filiais (PR-07). | Concentração escondida em coligadas e controladas. | Cadastro de grupos mantido pela gestora, consultado pela RN-07. |
 | M-04 | **PL do fim do mês anterior** em vez de PL fixo (PR-06; ZIG 5.19). | O limite em reais muda todo mês. | Porta `NetAssetValueProvider` alimentada pelo administrador. |
 | M-05 | **Registro em registradora** (duplicata escritural, Lei 13.775/2018). | A RN-09 só enxerga a carteira do fundo; a registradora enxerga cessões para outros fundos. | Consulta à registradora antes de aceitar. |
-| M-06 | **Remessa assíncrona** (202 + callback) para lotes grandes. | Hoje o lote é avaliado na requisição; 1.000 títulos com calendário de dias úteis ficam lentos. | Fila e webhook de resultado. |
+| M-06 | **Remessa assíncrona** (202 + callback) para lotes grandes. | O lote é avaliado dentro da requisição. Com 1.000 títulos e cálculo de dias úteis, a resposta fica lenta. | Fila e webhook de resultado. |
 | M-07 | **Limites dos 5 maiores** (BMA 7.24 f, g) e **outros tipos de título** (7.24 c, d, e). | Fecham o regulamento-modelo. | Backlog: Could/Won't em `docs/discovery/backlog.md`. |
 | M-08 | **Carteira persistente.** A carteira simulada vive em memória e volta ao estado inicial quando o mock reinicia. | Em produção, a carteira é a do custodiante. | Repositório da carteira no Postgres, alimentado pela posição diária (`custody_position`). |
 | M-09 | **Mensagens de validação em pt-BR.** As mensagens do Ajv para erros de schema saem em inglês. | Experiência do desenvolvedor do cedente. | `ajv-i18n` ou mapa próprio de mensagens. |
+
+## Convenções
+
+Arquitetura, contrato e testes seguem [`.claude/rules/arquitetura.md`](../.claude/rules/arquitetura.md), [`api.md`](../.claude/rules/api.md) e [`testes.md`](../.claude/rules/testes.md).

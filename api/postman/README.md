@@ -1,12 +1,13 @@
 # Homologação · coleção Postman
 
-Regra: `.claude/rules/testes.md`. A coleção é a prova de aceite da integração: se ela fica vermelha no CI, o merge é bloqueado.
+Prova de aceite da integração: 29 casos e 63 asserções que cobrem o caminho feliz, cada regra RN-01 a RN-10 violada, payload inválido, reenvio idempotente e conflito de idempotência. Falha na coleção bloqueia o merge.
 
-- Arquivo: `fidc-remessa.postman_collection.json` (Postman v2.1; importável no Postman).
-- Rodar localmente: `make newman`. O script compila o mock, sobe com `REFERENCE_DATE=2026-10-14`, roda a coleção e derruba o mock. O relatório JUnit vai para `api/reports/newman.xml`.
-- No CI: job `homologação (Newman)` em `.github/workflows/check.yml`, depois do `make check`. O relatório sobe como artefato.
-- A coleção supõe o mock **recém-iniciado**, porque a carteira simulada muda conforme as remessas são aceitas. A ordem dos requests importa.
-- Nos casos de regra, o teste do `POST` consulta `GET /remessas/{id}/rejeicoes` (via `pm.sendRequest`) e confere o código da rejeição.
+- **Arquivo:** [`fidc-remessa.postman_collection.json`](fidc-remessa.postman_collection.json), no formato Postman v2.1, importável no Postman.
+- **Execução local:** `make newman`. O script compila o mock, sobe com `REFERENCE_DATE=2026-10-14`, executa a coleção e encerra o mock. O relatório JUnit fica em `api/reports/newman.xml`.
+- **CI:** job `homologação (Newman)` em `.github/workflows/check.yml`, depois do `check`. O relatório é publicado como artefato.
+- **Ordem:** a coleção pressupõe um mock recém-iniciado, porque a carteira simulada muda à medida que as remessas são aceitas.
+- **Verificação das regras:** nos casos de regra, o teste do `POST` consulta `GET /remessas/{id}/rejeicoes` (via `pm.sendRequest`) e confere o código da rejeição.
+- **Convenção:** o nome de cada request cita a história e a regra (`HU-03 · RN-02 · vencido`), conforme [`.claude/rules/testes.md`](../../.claude/rules/testes.md).
 
 ## Casos
 
@@ -42,4 +43,4 @@ Regra: `.claude/rules/testes.md`. A coleção é a prova de aceite da integraç�
 | 28 | HU-09 · consulta das rejeições | 200, posições 2 e 3, códigos `RN-NN_...` |
 | 29 | HU-09 · rejeições de remessa inexistente | 404 `BATCH_NOT_FOUND` |
 
-O `make check` confere que a coleção tem pelo menos 15 casos nomeados `HU-NN · ...` e que cada regra RN-01 a RN-10 aparece em ao menos um nome.
+O `make check` verifica que a coleção tem ao menos 15 casos nomeados `HU-NN · ...` e que cada regra RN-01 a RN-10 aparece em pelo menos um nome.

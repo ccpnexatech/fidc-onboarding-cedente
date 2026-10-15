@@ -1,24 +1,53 @@
-# P3 · Gestão da entrega
+# Gestão da entrega
 
-Regra: `.claude/rules/gestao.md`.
+Acompanhamento do fluxo de trabalho: quadro, métricas e status reports. Os números vêm do quadro e do Git, nunca de estimativa. Convenções em [`.claude/rules/gestao.md`](../.claude/rules/gestao.md).
 
-- **Quadro:** [GitHub Project](https://github.com/users/ccpnexatech/projects/1) vinculado ao repo (Todo → In progress → Review → Done, WIP 2). Ver ADR-0001.
-- **Card automático** ([ADR-0007](../decisoes/0007-automacao-do-fluxo.md)): o workflow `quadro` move o card sozinho.
-  - branch `tipo/<nº>-descricao` criada → In progress;
-  - PR com `Closes #N` → Review;
-  - issue fechada → Done;
-  - issue aberta → Todo.
-  - Cada mudança vira um comentário na issue, e esse comentário é o histórico de colunas que a API não guarda.
-- **Mover à mão** (exceção): `gestao/quadro.sh <issue> <status> [motivo]`, que também comenta na issue. O `quadro.csv` é o registro manual até 2026-10-15, mantido como histórico.
-- **Status reports semanais:** em `status/AAAA-MM-DD.md`.
-  - Toda segunda às 08:00, o workflow `semanal` roda `gestao/semanal.sh` e abre um PR com o status e a tabela de métricas.
-  - Revisar o PR é a parte do Caio: os riscos que o script acha vêm dos dados, e os riscos de negócio entram à mão.
-  - Sob demanda: `gh workflow run semanal` ou `bash gestao/semanal.sh [AAAA-MM-DD]`.
-- **Métricas de fluxo:** lead time por história, em horas, em [`metricas.md`](metricas.md). A tabela é gerada por `metricas.sh` a partir do Git e do GitHub, só entre os marcadores do arquivo.
+## Quadro
 
-| Item | Status |
+[GitHub Project](https://github.com/users/ccpnexatech/projects/1) vinculado ao repositório, com colunas Todo → In progress → Review → Done e WIP de 2 itens ([ADR-0001](../decisoes/0001-quadro-github-projects.md)).
+
+O workflow `quadro` move os cards automaticamente ([ADR-0007](../decisoes/0007-automacao-do-fluxo.md)):
+
+| Evento | Coluna |
 |---|---|
-| Quadro com colunas e issues HU-01 a HU-11 | feito |
-| Status reports 2026-10-14 e 2026-10-15 | feito |
-| Métricas com lead time real (horas) | feito |
-| Quadro automático, validação de PR, rotina semanal e Pages (ADR-0007, #30 a #33) | feito |
+| Issue aberta ou reaberta | Todo |
+| Branch `tipo/<nº>-descricao` criada | In progress |
+| PR aberto com `Closes #N` | Review |
+| Issue fechada | Done |
+
+Cada mudança gera um comentário na issue. Esse comentário é o histórico de colunas, que a API do GitHub Projects não armazena, e serve de base para o lead time. Passar de 2 itens em In progress gera um aviso.
+
+Para mover um card manualmente: `gestao/quadro.sh <issue> <coluna> [motivo]`. O registro também vai para a issue. O arquivo `quadro.csv` guarda os movimentos manuais feitos até 2026-10-15.
+
+## Métricas de fluxo
+
+[`metricas.md`](metricas.md) traz o lead time por item, em horas, gerado por `metricas.sh`. O início é a entrada em In progress, lido nesta ordem de preferência:
+1. comentário do quadro;
+2. `quadro.csv`;
+3. primeiro commit do PR.
+
+O fim é o merge.
+
+## Status reports
+
+Um por semana, em [`status/`](status/), com três seções: Feito, Riscos (com dono e ação) e Próximo.
+
+- Toda segunda-feira às 08:00 (Brasília), o workflow `semanal` executa `semanal.sh` e abre um PR com o relatório e a tabela de métricas atualizada.
+- Os riscos gerados vêm dos dados:
+  - CI vermelho;
+  - WIP acima do limite;
+  - PR parado há mais de 3 dias;
+  - ADR em `proposta`;
+  - premissa a validar.
+- Riscos de negócio são acrescentados na revisão do PR.
+- Execução sob demanda: `gh workflow run semanal` ou `bash gestao/semanal.sh [AAAA-MM-DD]`.
+
+## Scripts
+
+| Script | Função |
+|---|---|
+| `quadro.sh` | Move um card e registra a mudança na issue. |
+| `quadro-evento.sh` | Converte eventos do GitHub Actions em movimentos do quadro. |
+| `metricas.sh` | Gera a tabela de lead time. |
+| `status.sh` / `status.py` | Coletam os dados da semana e montam o status report. |
+| `semanal.sh` | Gera o status, atualiza a tabela de métricas e o menu do site. |
