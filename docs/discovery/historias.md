@@ -1,6 +1,6 @@
 # Histórias (HU-01 a HU-11)
 
-Regra: `.claude/rules/requisitos.md`. Cada história vira uma issue com o label `historia`. As regras estão em `regras.md`. Nos exemplos, a data de referência é 2026-10-14 e a carteira simulada é a descrita em `api/README.md`.
+Histórias de usuário com critérios de aceite em Gherkin. Cada história corresponde a uma issue com o label `historia`; as regras citadas estão em [`regras.md`](regras.md). Nos exemplos, a data de referência é 2026-10-14 e a carteira simulada é a descrita em [`api/README.md`](../../api/README.md#carteira-simulada). Convenções em [`.claude/rules/requisitos.md`](../../.claude/rules/requisitos.md).
 
 ## Rastreabilidade
 
@@ -18,7 +18,7 @@ Regra: `.claude/rules/requisitos.md`. Cada história vira uma issue com o label 
 | HU-10 · Consultar a remessa | analista da gestora | — | `GET /remessas/{id}` | [#16](https://github.com/ccpnexatech/fidc-onboarding-cedente/issues/16) |
 | HU-11 · Conciliar remessa e custódia | operação | — | SQL de conciliação | [#17](https://github.com/ccpnexatech/fidc-onboarding-cedente/issues/17) |
 
-Toda RN aparece em ao menos uma HU.
+Todas as regras RN-01 a RN-10 estão cobertas por ao menos uma história.
 
 ---
 
@@ -57,7 +57,7 @@ Funcionalidade: Envio de remessa
 
 ## HU-02 · Reenviar sem duplicar a cessão
 
-Como **cedente**, quero **reenviar a mesma remessa após uma falha de rede sem gerar uma nova cessão**, para **ter segurança de tentar de novo sem pagar duas vezes pelo mesmo título**.
+Como **cedente**, quero **reenviar a mesma remessa após uma falha de rede sem gerar uma nova cessão**, para **repetir o envio com segurança, sem cessão duplicada**.
 
 Regras: RN-09 (indireta). Premissa: PR-05.
 
@@ -80,7 +80,7 @@ Funcionalidade: Idempotência do envio
 
 ## HU-03 · Barrar título inválido na origem
 
-Como **analista da gestora**, quero **que títulos de tipo não aceito, vencidos ou sem nota fiscal sejam rejeitados automaticamente**, para **não gastar análise com o que o regulamento já proíbe**.
+Como **analista da gestora**, quero **que títulos de tipo não aceito, vencidos ou sem nota fiscal sejam rejeitados automaticamente**, para **concentrar a análise no que o regulamento permite**.
 
 Regras: RN-01, RN-02, RN-04.
 
@@ -115,7 +115,7 @@ Funcionalidade: Validação do título
 
 ## HU-04 · Barrar sacado inadimplente
 
-Como **analista da gestora**, quero **que títulos de sacados em atraso com o fundo sejam rejeitados**, para **não aumentar a exposição a quem já não paga**.
+Como **analista da gestora**, quero **que títulos de sacados em atraso com o fundo sejam rejeitados**, para **não ampliar a exposição a devedores inadimplentes**.
 
 Regras: RN-05.
 
@@ -219,7 +219,7 @@ Funcionalidade: Duplicidade
 
 ## HU-08 · Manter o prazo médio da carteira
 
-Como **analista da gestora**, quero **que um título longo não leve o prazo médio da carteira acima de 75 dias úteis**, para **manter a carteira curta e o caixa girando**.
+Como **analista da gestora**, quero **que um título longo não leve o prazo médio da carteira acima de 75 dias úteis**, para **preservar o prazo e o giro de caixa da carteira**.
 
 Regras: RN-03.
 
@@ -239,7 +239,7 @@ Funcionalidade: Prazo médio ponderado
 
 ## HU-09 · Consultar as rejeições
 
-Como **cedente**, quero **consultar os títulos rejeitados com um código estável por motivo**, para **corrigir só o que foi recusado e reenviar**.
+Como **cedente**, quero **consultar os títulos rejeitados com um código estável por motivo**, para **corrigir e reenviar apenas o que foi recusado**.
 
 Regras: todas (consulta).
 

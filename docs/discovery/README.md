@@ -1,12 +1,12 @@
-# P1 · Discovery
+# Discovery
 
-Regra: `.claude/rules/requisitos.md`.
+Levantamento que fundamenta a API: o processo atual, as regras de elegibilidade com suas fontes, as histórias com critérios de aceite e a priorização. A pasta é suficiente para construir a API sem outra fonte de requisitos.
 
-Pronto quando um dev consegue construir o P2 só lendo esta pasta.
+| Documento | Conteúdo |
+|---|---|
+| [`as-is.md`](as-is.md) | Processo atual, atores, 9 pontos de falha e o processo proposto (TO-BE). |
+| [`regras.md`](regras.md) | 10 regras de elegibilidade (RN-01 a RN-10): enunciado, motivo, fonte, exemplos, código de rejeição, parâmetros do fundo e ordem de avaliação. |
+| [`historias.md`](historias.md) | 11 histórias (HU-01 a HU-11) com critérios de aceite em Gherkin e matriz de rastreabilidade. |
+| [`backlog.md`](backlog.md) | Priorização por RICE e corte de MVP por MoSCoW. |
 
-| Arquivo | Conteúdo | Status |
-|---|---|---|
-| `as-is.md` | Processo atual (planilha por e-mail) e pontos de falha | feito |
-| `regras.md` | 10 regras de elegibilidade (RN-01 a RN-10), com parâmetros do fundo e ordem de avaliação | feito |
-| `historias.md` | 11 histórias (HU-01 a HU-11) com Gherkin e matriz de rastreabilidade | feito |
-| `backlog.md` | Priorização RICE e corte de MVP por MoSCoW | feito |
+Fontes primárias em [`docs/fontes/`](../fontes/); suposições em [`premissas.md`](../../premissas.md). Convenções em [`.claude/rules/requisitos.md`](../../.claude/rules/requisitos.md).
