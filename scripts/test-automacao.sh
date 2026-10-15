@@ -20,7 +20,7 @@ esperar() { # <nome do caso> <saída esperada> <saída obtida>
 
 quadro() { # <evento> <payload JSON>
   echo "$2" > "$temporario/evento.json"
-  QUADRO_DRY_RUN=1 bash gestao/quadro-evento.sh "$1" "$temporario/evento.json"
+  QUADRO_DRY_RUN=1 bash gestao/quadro-evento.sh "$1" "$temporario/evento.json" || echo "saiu com erro $?"
 }
 
 esperar "branch tipo/<nº>-descricao vai para In progress" "30|In progress|branch ci/30-quadro" \
@@ -38,6 +38,8 @@ esperar "PR pronto para revisão vai para Review" "9|Review|PR #24" \
   "$(quadro pull_request '{"action":"ready_for_review","pull_request":{"number":24,"draft":false,"body":"Fixes #9"}}')"
 esperar "PR sem corpo não quebra" "" \
   "$(quadro pull_request '{"action":"opened","pull_request":{"number":25,"draft":false,"body":null}}')"
+esperar "PR com Sem issue não move card e não quebra" "" \
+  "$(quadro pull_request '{"action":"opened","pull_request":{"number":37,"draft":false,"body":"## O que\nstatus\n\nSem issue: rotina semanal"}}')"
 esperar "issue aberta vai para Todo" "31|Todo|issue aberta" \
   "$(quadro issues '{"action":"opened","issue":{"number":31}}')"
 esperar "issue fechada vai para Done" "31|Done|issue fechada" \
@@ -70,7 +72,7 @@ FALHA: corpo do PR sem 'Closes #N' ('Refs #N' quando não fecha; 'Sem issue: <mo
   "$(pr "chore: ajusta" '## O que\nsó isso' "chore: ajusta")"
 
 status() { # <JSON> → status report
-  python3 -I gestao/status.py <<< "$1"
+  python3 -I gestao/status.py <<< "$1" || echo "saiu com erro $?"
 }
 semana='{"data":"2026-10-19","desde":"2026-10-12","ciMain":"failure",
   "mergeados":[{"number":40,"title":"feat: algo","body":"Closes #36\ncloses #37"},{"number":39,"title":"docs: x","body":null}],

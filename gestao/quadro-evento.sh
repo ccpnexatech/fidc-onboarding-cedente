@@ -33,10 +33,9 @@ case "$evento" in
     [[ "$acao" =~ ^(opened|reopened|ready_for_review)$ ]] || exit 0
     [[ "$(jq -r .pull_request.draft "$payload")" == "true" ]] && exit 0
     pr=$(jq -r .pull_request.number "$payload")
-    jq -r '.pull_request.body // ""' "$payload" |
-      grep -oiE '\b(close[sd]?|fix(e[sd])?|resolve[sd]?) #[0-9]+' |
-      grep -oE '[0-9]+$' | sort -un |
-      while read -r issue; do mover "$issue" "Review" "PR #$pr"; done
+    issues=$(jq -r '.pull_request.body // ""' "$payload" |
+      grep -oiE '\b(close[sd]?|fix(e[sd])?|resolve[sd]?) #[0-9]+' | grep -oE '[0-9]+$' | sort -un || true)
+    for issue in $issues; do mover "$issue" "Review" "PR #$pr"; done
     ;;
   issues)
     acao=$(jq -r .action "$payload")

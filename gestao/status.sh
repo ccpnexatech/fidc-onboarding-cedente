@@ -19,7 +19,7 @@ abertos=$(gh pr list --repo "$repo" --state open --limit 200 --json number,creat
 itens=$(projeto project item-list "$project_number" --owner "$owner" --limit 500 --format json \
   --jq '[.items[] | select(.content.type == "Issue") | {number: .content.number, title: .title, status: (.status // "")}]')
 ci_main=$(gh run list --repo "$repo" --workflow check --branch main --limit 1 --json conclusion --jq '.[0].conclusion // ""')
-adrs=$(grep -l '^- \*\*Status:\*\* proposta' decisoes/[0-9]*.md | xargs -r -n1 basename | cut -c1-4 | jq -R . | jq -sc .)
+adrs=$({ grep -l '^- \*\*Status:\*\* proposta' decisoes/[0-9]*.md || true; } | xargs -r -n1 basename | cut -c1-4 | jq -R . | jq -sc .)
 premissas=$(awk -F'|' '/^\| PR-[0-9]+ \|/ && $6 ~ /a validar/ { gsub(/ /, "", $2); print $2 }' premissas.md | jq -R . | jq -sc .)
 
 jq -n --arg data "$data" --arg desde "$desde" --arg ciMain "$ci_main" \
