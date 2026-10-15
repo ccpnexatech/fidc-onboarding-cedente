@@ -13,7 +13,7 @@
   - [Conciliação SQL](api/sql/README.md)
 - P3 · Gestão
   - [Gestão](gestao/README.md)
-  - [Status 2026-10-14](gestao/status/2026-10-14.md)
+  - [Status 2026-10-15](gestao/status/2026-10-15.md)
   - [Métricas](gestao/metricas.md)
 - [Decisões (ADRs)](decisoes/README.md)
 - Diário

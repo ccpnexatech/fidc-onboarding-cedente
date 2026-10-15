@@ -1,0 +1,75 @@
+name: semanal
+
+# Toda segunda às 08:00 (Brasília) gera o status report e as métricas e abre um PR para o Caio revisar (#32, ADR-0007).
+on:
+  schedule:
+    - cron: "0 11 * * 1"
+  workflow_dispatch:
+    inputs:
+      data:
+        description: "Data do relatório (AAAA-MM-DD); vazio = hoje"
+        required: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: semanal
+
+jobs:
+  status:
+    runs-on: ubuntu-latest
+    env:
+      # Com o token pessoal, o push e o PR disparam o CI; com o GITHUB_TOKEN, não disparam.
+      GH_TOKEN: ${{ secrets.PROJECT_TOKEN || github.token }}
+      PROJECT_TOKEN: ${{ secrets.PROJECT_TOKEN }}
+      REPO: ${{ github.repository }}
+      DATA_INFORMADA: ${{ inputs.data }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          token: ${{ secrets.PROJECT_TOKEN || github.token }}
+
+      - name: gera status report e métricas
+        run: |
+          data="${DATA_INFORMADA:-$(TZ=America/Sao_Paulo date +%F)}"
+          [[ "$data" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] || { echo "::error::data inválida: $data"; exit 1; }
+          [[ -n "$PROJECT_TOKEN" ]] || echo "::warning::Sem PROJECT_TOKEN: o PR não vai disparar o CI (ADR-0007)."
+          echo "DATA=$data" >> "$GITHUB_ENV"
+          bash gestao/semanal.sh "$data"
+
+      - name: abre ou atualiza o PR
+        run: |
+          branch="docs/status-$DATA"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git add "gestao/status/$DATA.md" gestao/metricas.md site/_sidebar.md
+          if git diff --cached --quiet; then
+            echo "Nada mudou desde o último relatório."
+            exit 0
+          fi
+          git commit -q -m "docs: gera status report e metricas de $DATA"
+          git push -q -f origin "$branch"
+          if [[ "$(gh pr list --head "$branch" --state open --json number --jq length)" != "0" ]]; then
+            echo "PR de $DATA atualizado."
+            exit 0
+          fi
+          gh pr create --base main --head "$branch" \
+            --title "docs: gera status report e metricas de $DATA" \
+            --body "## O que
+
+          - Status report \`gestao/status/$DATA.md\`.
+          - Tabela de lead time em \`gestao/metricas.md\`, regenerada pela rotina semanal.
+
+          ## Por que
+
+          A \`.claude/rules/gestao.md\` pede status semanal e lead time consolidado, com números do quadro e do Git, nunca de estimativa (ADR-0007).
+
+          ## Como validei
+
+          - [x] Gerado por \`gestao/semanal.sh\` a partir do GitHub, sem edição manual.
+          - [ ] Caio: revisar os riscos e acrescentar os riscos de negócio que os dados não mostram.
+
+          Sem issue: rotina semanal automática (ADR-0007)."
