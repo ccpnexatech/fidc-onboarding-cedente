@@ -1,0 +1,777 @@
+{
+  "assignors": [
+    {
+      "id": "12345678000195",
+      "name": "Alfa Distribuidora de Alimentos Ltda",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "11222333000181",
+      "name": "Beta Industria Metalurgica SA",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "98765432000198",
+      "name": "Gama Comercio de Embalagens Ltda",
+      "status": "SUSPENDED"
+    },
+    {
+      "id": "77888999000181",
+      "name": "Delta Servicos Logisticos Ltda",
+      "status": "UNDER_REVIEW"
+    },
+    {
+      "id": "21000001000106",
+      "name": "Cedente Carteira 01 Ltda",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "22000002000113",
+      "name": "Cedente Carteira 02 Ltda",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "23000003000120",
+      "name": "Cedente Carteira 03 Ltda",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "24000004000138",
+      "name": "Cedente Carteira 04 Ltda",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "25000005000145",
+      "name": "Cedente Carteira 05 Ltda",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "26000006000152",
+      "name": "Cedente Carteira 06 Ltda",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "27000007000160",
+      "name": "Cedente Carteira 07 Ltda",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "28000008000177",
+      "name": "Cedente Carteira 08 Ltda",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "29000009000184",
+      "name": "Cedente Carteira 09 Ltda",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "30000010000198",
+      "name": "Cedente Carteira 10 Ltda",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "31000011000103",
+      "name": "Cedente Carteira 11 Ltda",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "32000012000102",
+      "name": "Cedente Carteira 12 Ltda",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "33000013000110",
+      "name": "Cedente Carteira 13 Ltda",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "34000014000127",
+      "name": "Cedente Carteira 14 Ltda",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "35000015000134",
+      "name": "Cedente Carteira 15 Ltda",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "36000016000141",
+      "name": "Cedente Carteira 16 Ltda",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "37000017000159",
+      "name": "Cedente Carteira 17 Ltda",
+      "status": "ACTIVE"
+    }
+  ],
+  "holdings": [
+    {
+      "assignorId": "12345678000195",
+      "externalId": "DM-2026-0001",
+      "invoiceKey": "35261010000000000000000000000000000000000001",
+      "debtorTaxId": "66777888000181",
+      "faceValue": 30000000,
+      "dueDate": "2026-12-11",
+      "paidAt": null
+    },
+    {
+      "assignorId": "12345678000195",
+      "externalId": "DM-2026-0002",
+      "invoiceKey": "35261010000000000000000000000000000000000002",
+      "debtorTaxId": "66777888000181",
+      "faceValue": 12000000,
+      "dueDate": "2026-09-15",
+      "paidAt": "2026-09-15"
+    },
+    {
+      "assignorId": "21000001000106",
+      "externalId": "DM-2026-1001",
+      "invoiceKey": "35261010000000000000000000000000000000000003",
+      "debtorTaxId": "55666777000181",
+      "faceValue": 150000000,
+      "dueDate": "2027-01-26",
+      "paidAt": null
+    },
+    {
+      "assignorId": "22000002000113",
+      "externalId": "DM-2026-1002",
+      "invoiceKey": "35261010000000000000000000000000000000000004",
+      "debtorTaxId": "55666777000262",
+      "faceValue": 45000000,
+      "dueDate": "2027-02-02",
+      "paidAt": null
+    },
+    {
+      "assignorId": "23000003000120",
+      "externalId": "DM-2026-1003",
+      "invoiceKey": "35261010000000000000000000000000000000000005",
+      "debtorTaxId": "44555666000181",
+      "faceValue": 100000000,
+      "dueDate": "2027-01-28",
+      "paidAt": null
+    },
+    {
+      "assignorId": "24000004000138",
+      "externalId": "DM-2026-1004",
+      "invoiceKey": "35261010000000000000000000000000000000000006",
+      "debtorTaxId": "22333444000181",
+      "faceValue": 5000000,
+      "dueDate": "2026-10-04",
+      "paidAt": null
+    },
+    {
+      "assignorId": "24000004000138",
+      "externalId": "DM-2026-1005",
+      "invoiceKey": "35261010000000000000000000000000000000000007",
+      "debtorTaxId": "33444555000181",
+      "faceValue": 8000000,
+      "dueDate": "2026-09-24",
+      "paidAt": null
+    },
+    {
+      "assignorId": "11222333000181",
+      "externalId": "DM-2026-2000",
+      "invoiceKey": "35261010000000000000000000000000000000000008",
+      "debtorTaxId": "61000007000106",
+      "faceValue": 100000000,
+      "dueDate": "2027-01-12",
+      "paidAt": null
+    },
+    {
+      "assignorId": "11222333000181",
+      "externalId": "DM-2026-2001",
+      "invoiceKey": "35261010000000000000000000000000000000000009",
+      "debtorTaxId": "62000014000162",
+      "faceValue": 100000000,
+      "dueDate": "2027-02-11",
+      "paidAt": null
+    },
+    {
+      "assignorId": "11222333000181",
+      "externalId": "DM-2026-2002",
+      "invoiceKey": "35261010000000000000000000000000000000000010",
+      "debtorTaxId": "63000021000127",
+      "faceValue": 100000000,
+      "dueDate": "2027-02-25",
+      "paidAt": null
+    },
+    {
+      "assignorId": "11222333000181",
+      "externalId": "DM-2026-2003",
+      "invoiceKey": "35261010000000000000000000000000000000000011",
+      "debtorTaxId": "64000028000101",
+      "faceValue": 70000000,
+      "dueDate": "2027-01-26",
+      "paidAt": null
+    },
+    {
+      "assignorId": "25000005000145",
+      "externalId": "DM-2026-3000",
+      "invoiceKey": "35261010000000000000000000000000000000000012",
+      "debtorTaxId": "65000035000176",
+      "faceValue": 40000000,
+      "dueDate": "2026-12-18",
+      "paidAt": null
+    },
+    {
+      "assignorId": "26000006000152",
+      "externalId": "DM-2026-3001",
+      "invoiceKey": "35261010000000000000000000000000000000000013",
+      "debtorTaxId": "66000042000130",
+      "faceValue": 55000000,
+      "dueDate": "2027-01-12",
+      "paidAt": null
+    },
+    {
+      "assignorId": "27000007000160",
+      "externalId": "DM-2026-3002",
+      "invoiceKey": "35261010000000000000000000000000000000000014",
+      "debtorTaxId": "67000049000115",
+      "faceValue": 35000000,
+      "dueDate": "2027-02-02",
+      "paidAt": null
+    },
+    {
+      "assignorId": "28000008000177",
+      "externalId": "DM-2026-3003",
+      "invoiceKey": "35261010000000000000000000000000000000000015",
+      "debtorTaxId": "68000056000180",
+      "faceValue": 50000000,
+      "dueDate": "2027-02-25",
+      "paidAt": null
+    },
+    {
+      "assignorId": "29000009000184",
+      "externalId": "DM-2026-3004",
+      "invoiceKey": "35261010000000000000000000000000000000000016",
+      "debtorTaxId": "69000063000144",
+      "faceValue": 40000000,
+      "dueDate": "2027-03-04",
+      "paidAt": null
+    },
+    {
+      "assignorId": "30000010000198",
+      "externalId": "DM-2026-3005",
+      "invoiceKey": "35261010000000000000000000000000000000000017",
+      "debtorTaxId": "70000070000125",
+      "faceValue": 55000000,
+      "dueDate": "2027-01-26",
+      "paidAt": null
+    },
+    {
+      "assignorId": "31000011000103",
+      "externalId": "DM-2026-3006",
+      "invoiceKey": "35261010000000000000000000000000000000000018",
+      "debtorTaxId": "71000077000100",
+      "faceValue": 35000000,
+      "dueDate": "2027-02-11",
+      "paidAt": null
+    },
+    {
+      "assignorId": "32000012000102",
+      "externalId": "DM-2026-3007",
+      "invoiceKey": "35261010000000000000000000000000000000000019",
+      "debtorTaxId": "72000084000174",
+      "faceValue": 50000000,
+      "dueDate": "2027-01-19",
+      "paidAt": null
+    },
+    {
+      "assignorId": "33000013000110",
+      "externalId": "DM-2026-3008",
+      "invoiceKey": "35261010000000000000000000000000000000000020",
+      "debtorTaxId": "73000091000139",
+      "faceValue": 40000000,
+      "dueDate": "2027-02-11",
+      "paidAt": null
+    },
+    {
+      "assignorId": "34000014000127",
+      "externalId": "DM-2026-3009",
+      "invoiceKey": "35261010000000000000000000000000000000000021",
+      "debtorTaxId": "74000098000113",
+      "faceValue": 55000000,
+      "dueDate": "2027-02-25",
+      "paidAt": null
+    },
+    {
+      "assignorId": "35000015000134",
+      "externalId": "DM-2026-3010",
+      "invoiceKey": "35261010000000000000000000000000000000000022",
+      "debtorTaxId": "75000105000140",
+      "faceValue": 35000000,
+      "dueDate": "2026-12-18",
+      "paidAt": null
+    },
+    {
+      "assignorId": "36000016000141",
+      "externalId": "DM-2026-3011",
+      "invoiceKey": "35261010000000000000000000000000000000000023",
+      "debtorTaxId": "76000112000104",
+      "faceValue": 50000000,
+      "dueDate": "2027-01-12",
+      "paidAt": null
+    },
+    {
+      "assignorId": "25000005000145",
+      "externalId": "DM-2026-3012",
+      "invoiceKey": "35261010000000000000000000000000000000000024",
+      "debtorTaxId": "77000119000199",
+      "faceValue": 40000000,
+      "dueDate": "2027-02-02",
+      "paidAt": null
+    },
+    {
+      "assignorId": "26000006000152",
+      "externalId": "DM-2026-3013",
+      "invoiceKey": "35261010000000000000000000000000000000000025",
+      "debtorTaxId": "78000126000153",
+      "faceValue": 55000000,
+      "dueDate": "2027-02-25",
+      "paidAt": null
+    },
+    {
+      "assignorId": "27000007000160",
+      "externalId": "DM-2026-3014",
+      "invoiceKey": "35261010000000000000000000000000000000000026",
+      "debtorTaxId": "79000133000118",
+      "faceValue": 35000000,
+      "dueDate": "2027-03-04",
+      "paidAt": null
+    },
+    {
+      "assignorId": "28000008000177",
+      "externalId": "DM-2026-3015",
+      "invoiceKey": "35261010000000000000000000000000000000000027",
+      "debtorTaxId": "80000140000107",
+      "faceValue": 50000000,
+      "dueDate": "2027-01-26",
+      "paidAt": null
+    },
+    {
+      "assignorId": "29000009000184",
+      "externalId": "DM-2026-3016",
+      "invoiceKey": "35261010000000000000000000000000000000000028",
+      "debtorTaxId": "81000147000183",
+      "faceValue": 40000000,
+      "dueDate": "2027-02-11",
+      "paidAt": null
+    },
+    {
+      "assignorId": "30000010000198",
+      "externalId": "DM-2026-3017",
+      "invoiceKey": "35261010000000000000000000000000000000000029",
+      "debtorTaxId": "82000154000148",
+      "faceValue": 55000000,
+      "dueDate": "2027-01-19",
+      "paidAt": null
+    },
+    {
+      "assignorId": "31000011000103",
+      "externalId": "DM-2026-3018",
+      "invoiceKey": "35261010000000000000000000000000000000000030",
+      "debtorTaxId": "83000161000102",
+      "faceValue": 35000000,
+      "dueDate": "2027-02-11",
+      "paidAt": null
+    },
+    {
+      "assignorId": "32000012000102",
+      "externalId": "DM-2026-3019",
+      "invoiceKey": "35261010000000000000000000000000000000000031",
+      "debtorTaxId": "84000168000197",
+      "faceValue": 50000000,
+      "dueDate": "2027-02-25",
+      "paidAt": null
+    },
+    {
+      "assignorId": "33000013000110",
+      "externalId": "DM-2026-3020",
+      "invoiceKey": "35261010000000000000000000000000000000000032",
+      "debtorTaxId": "85000175000151",
+      "faceValue": 40000000,
+      "dueDate": "2026-12-18",
+      "paidAt": null
+    },
+    {
+      "assignorId": "34000014000127",
+      "externalId": "DM-2026-3021",
+      "invoiceKey": "35261010000000000000000000000000000000000033",
+      "debtorTaxId": "86000182000116",
+      "faceValue": 55000000,
+      "dueDate": "2027-01-12",
+      "paidAt": null
+    },
+    {
+      "assignorId": "35000015000134",
+      "externalId": "DM-2026-3022",
+      "invoiceKey": "35261010000000000000000000000000000000000034",
+      "debtorTaxId": "87000189000109",
+      "faceValue": 35000000,
+      "dueDate": "2027-02-02",
+      "paidAt": null
+    },
+    {
+      "assignorId": "36000016000141",
+      "externalId": "DM-2026-3023",
+      "invoiceKey": "35261010000000000000000000000000000000000035",
+      "debtorTaxId": "88000196000165",
+      "faceValue": 50000000,
+      "dueDate": "2027-02-25",
+      "paidAt": null
+    },
+    {
+      "assignorId": "25000005000145",
+      "externalId": "DM-2026-3024",
+      "invoiceKey": "35261010000000000000000000000000000000000036",
+      "debtorTaxId": "89000203000191",
+      "faceValue": 40000000,
+      "dueDate": "2027-03-04",
+      "paidAt": null
+    },
+    {
+      "assignorId": "26000006000152",
+      "externalId": "DM-2026-3025",
+      "invoiceKey": "35261010000000000000000000000000000000000037",
+      "debtorTaxId": "90000210000172",
+      "faceValue": 55000000,
+      "dueDate": "2027-01-26",
+      "paidAt": null
+    },
+    {
+      "assignorId": "27000007000160",
+      "externalId": "DM-2026-3026",
+      "invoiceKey": "35261010000000000000000000000000000000000038",
+      "debtorTaxId": "91000217000157",
+      "faceValue": 35000000,
+      "dueDate": "2027-02-11",
+      "paidAt": null
+    },
+    {
+      "assignorId": "28000008000177",
+      "externalId": "DM-2026-3027",
+      "invoiceKey": "35261010000000000000000000000000000000000039",
+      "debtorTaxId": "92000224000111",
+      "faceValue": 50000000,
+      "dueDate": "2027-01-19",
+      "paidAt": null
+    },
+    {
+      "assignorId": "29000009000184",
+      "externalId": "DM-2026-3028",
+      "invoiceKey": "35261010000000000000000000000000000000000040",
+      "debtorTaxId": "93000231000186",
+      "faceValue": 40000000,
+      "dueDate": "2027-02-11",
+      "paidAt": null
+    },
+    {
+      "assignorId": "30000010000198",
+      "externalId": "DM-2026-3029",
+      "invoiceKey": "35261010000000000000000000000000000000000041",
+      "debtorTaxId": "94000238000160",
+      "faceValue": 55000000,
+      "dueDate": "2027-02-25",
+      "paidAt": null
+    },
+    {
+      "assignorId": "31000011000103",
+      "externalId": "DM-2026-3030",
+      "invoiceKey": "35261010000000000000000000000000000000000042",
+      "debtorTaxId": "95000245000125",
+      "faceValue": 35000000,
+      "dueDate": "2026-12-18",
+      "paidAt": null
+    },
+    {
+      "assignorId": "32000012000102",
+      "externalId": "DM-2026-3031",
+      "invoiceKey": "35261010000000000000000000000000000000000043",
+      "debtorTaxId": "96000252000190",
+      "faceValue": 50000000,
+      "dueDate": "2027-01-12",
+      "paidAt": null
+    },
+    {
+      "assignorId": "33000013000110",
+      "externalId": "DM-2026-3032",
+      "invoiceKey": "35261010000000000000000000000000000000000044",
+      "debtorTaxId": "97000259000174",
+      "faceValue": 40000000,
+      "dueDate": "2027-02-02",
+      "paidAt": null
+    },
+    {
+      "assignorId": "34000014000127",
+      "externalId": "DM-2026-3033",
+      "invoiceKey": "35261010000000000000000000000000000000000045",
+      "debtorTaxId": "98000266000139",
+      "faceValue": 55000000,
+      "dueDate": "2027-02-25",
+      "paidAt": null
+    },
+    {
+      "assignorId": "35000015000134",
+      "externalId": "DM-2026-3034",
+      "invoiceKey": "35261010000000000000000000000000000000000046",
+      "debtorTaxId": "99000273000101",
+      "faceValue": 35000000,
+      "dueDate": "2027-03-04",
+      "paidAt": null
+    },
+    {
+      "assignorId": "36000016000141",
+      "externalId": "DM-2026-3035",
+      "invoiceKey": "35261010000000000000000000000000000000000047",
+      "debtorTaxId": "10000028000000",
+      "faceValue": 50000000,
+      "dueDate": "2027-01-26",
+      "paidAt": null
+    },
+    {
+      "assignorId": "25000005000145",
+      "externalId": "DM-2026-3036",
+      "invoiceKey": "35261010000000000000000000000000000000000048",
+      "debtorTaxId": "10100028700059",
+      "faceValue": 40000000,
+      "dueDate": "2027-02-11",
+      "paidAt": null
+    },
+    {
+      "assignorId": "26000006000152",
+      "externalId": "DM-2026-3037",
+      "invoiceKey": "35261010000000000000000000000000000000000049",
+      "debtorTaxId": "10200029400004",
+      "faceValue": 55000000,
+      "dueDate": "2027-01-19",
+      "paidAt": null
+    },
+    {
+      "assignorId": "27000007000160",
+      "externalId": "DM-2026-3038",
+      "invoiceKey": "35261010000000000000000000000000000000000050",
+      "debtorTaxId": "10300030100040",
+      "faceValue": 35000000,
+      "dueDate": "2027-02-11",
+      "paidAt": null
+    },
+    {
+      "assignorId": "28000008000177",
+      "externalId": "DM-2026-3039",
+      "invoiceKey": "35261010000000000000000000000000000000000051",
+      "debtorTaxId": "10400030800005",
+      "faceValue": 50000000,
+      "dueDate": "2027-02-25",
+      "paidAt": null
+    },
+    {
+      "assignorId": "29000009000184",
+      "externalId": "DM-2026-3040",
+      "invoiceKey": "35261010000000000000000000000000000000000052",
+      "debtorTaxId": "10500031500052",
+      "faceValue": 40000000,
+      "dueDate": "2026-12-18",
+      "paidAt": null
+    },
+    {
+      "assignorId": "30000010000198",
+      "externalId": "DM-2026-3041",
+      "invoiceKey": "35261010000000000000000000000000000000000053",
+      "debtorTaxId": "10600032200008",
+      "faceValue": 55000000,
+      "dueDate": "2027-01-12",
+      "paidAt": null
+    },
+    {
+      "assignorId": "31000011000103",
+      "externalId": "DM-2026-3042",
+      "invoiceKey": "35261010000000000000000000000000000000000054",
+      "debtorTaxId": "10700032900065",
+      "faceValue": 35000000,
+      "dueDate": "2027-02-02",
+      "paidAt": null
+    },
+    {
+      "assignorId": "32000012000102",
+      "externalId": "DM-2026-3043",
+      "invoiceKey": "35261010000000000000000000000000000000000055",
+      "debtorTaxId": "10800033600010",
+      "faceValue": 50000000,
+      "dueDate": "2027-02-25",
+      "paidAt": null
+    },
+    {
+      "assignorId": "33000013000110",
+      "externalId": "DM-2026-3044",
+      "invoiceKey": "35261010000000000000000000000000000000000056",
+      "debtorTaxId": "10900034300076",
+      "faceValue": 40000000,
+      "dueDate": "2027-03-04",
+      "paidAt": null
+    },
+    {
+      "assignorId": "34000014000127",
+      "externalId": "DM-2026-3045",
+      "invoiceKey": "35261010000000000000000000000000000000000057",
+      "debtorTaxId": "65000035000176",
+      "faceValue": 55000000,
+      "dueDate": "2027-01-26",
+      "paidAt": null
+    },
+    {
+      "assignorId": "35000015000134",
+      "externalId": "DM-2026-3046",
+      "invoiceKey": "35261010000000000000000000000000000000000058",
+      "debtorTaxId": "66000042000130",
+      "faceValue": 35000000,
+      "dueDate": "2027-02-11",
+      "paidAt": null
+    },
+    {
+      "assignorId": "36000016000141",
+      "externalId": "DM-2026-3047",
+      "invoiceKey": "35261010000000000000000000000000000000000059",
+      "debtorTaxId": "67000049000115",
+      "faceValue": 50000000,
+      "dueDate": "2027-01-19",
+      "paidAt": null
+    },
+    {
+      "assignorId": "25000005000145",
+      "externalId": "DM-2026-3048",
+      "invoiceKey": "35261010000000000000000000000000000000000060",
+      "debtorTaxId": "68000056000180",
+      "faceValue": 40000000,
+      "dueDate": "2027-02-11",
+      "paidAt": null
+    },
+    {
+      "assignorId": "26000006000152",
+      "externalId": "DM-2026-3049",
+      "invoiceKey": "35261010000000000000000000000000000000000061",
+      "debtorTaxId": "69000063000144",
+      "faceValue": 55000000,
+      "dueDate": "2027-02-25",
+      "paidAt": null
+    },
+    {
+      "assignorId": "27000007000160",
+      "externalId": "DM-2026-3050",
+      "invoiceKey": "35261010000000000000000000000000000000000062",
+      "debtorTaxId": "70000070000125",
+      "faceValue": 35000000,
+      "dueDate": "2026-12-18",
+      "paidAt": null
+    },
+    {
+      "assignorId": "28000008000177",
+      "externalId": "DM-2026-3051",
+      "invoiceKey": "35261010000000000000000000000000000000000063",
+      "debtorTaxId": "71000077000100",
+      "faceValue": 50000000,
+      "dueDate": "2027-01-12",
+      "paidAt": null
+    },
+    {
+      "assignorId": "29000009000184",
+      "externalId": "DM-2026-3052",
+      "invoiceKey": "35261010000000000000000000000000000000000064",
+      "debtorTaxId": "72000084000174",
+      "faceValue": 40000000,
+      "dueDate": "2027-02-02",
+      "paidAt": null
+    },
+    {
+      "assignorId": "30000010000198",
+      "externalId": "DM-2026-3053",
+      "invoiceKey": "35261010000000000000000000000000000000000065",
+      "debtorTaxId": "73000091000139",
+      "faceValue": 55000000,
+      "dueDate": "2027-02-25",
+      "paidAt": null
+    },
+    {
+      "assignorId": "31000011000103",
+      "externalId": "DM-2026-3054",
+      "invoiceKey": "35261010000000000000000000000000000000000066",
+      "debtorTaxId": "74000098000113",
+      "faceValue": 35000000,
+      "dueDate": "2027-03-04",
+      "paidAt": null
+    },
+    {
+      "assignorId": "32000012000102",
+      "externalId": "DM-2026-3055",
+      "invoiceKey": "35261010000000000000000000000000000000000067",
+      "debtorTaxId": "75000105000140",
+      "faceValue": 50000000,
+      "dueDate": "2027-01-26",
+      "paidAt": null
+    },
+    {
+      "assignorId": "33000013000110",
+      "externalId": "DM-2026-3056",
+      "invoiceKey": "35261010000000000000000000000000000000000068",
+      "debtorTaxId": "76000112000104",
+      "faceValue": 40000000,
+      "dueDate": "2027-02-11",
+      "paidAt": null
+    },
+    {
+      "assignorId": "34000014000127",
+      "externalId": "DM-2026-3057",
+      "invoiceKey": "35261010000000000000000000000000000000000069",
+      "debtorTaxId": "77000119000199",
+      "faceValue": 55000000,
+      "dueDate": "2027-01-19",
+      "paidAt": null
+    },
+    {
+      "assignorId": "35000015000134",
+      "externalId": "DM-2026-3058",
+      "invoiceKey": "35261010000000000000000000000000000000000070",
+      "debtorTaxId": "78000126000153",
+      "faceValue": 35000000,
+      "dueDate": "2027-02-11",
+      "paidAt": null
+    },
+    {
+      "assignorId": "36000016000141",
+      "externalId": "DM-2026-3059",
+      "invoiceKey": "35261010000000000000000000000000000000000071",
+      "debtorTaxId": "79000133000118",
+      "faceValue": 50000000,
+      "dueDate": "2027-02-25",
+      "paidAt": null
+    },
+    {
+      "assignorId": "25000005000145",
+      "externalId": "DM-2026-3060",
+      "invoiceKey": "35261010000000000000000000000000000000000072",
+      "debtorTaxId": "80000140000107",
+      "faceValue": 40000000,
+      "dueDate": "2026-12-18",
+      "paidAt": null
+    },
+    {
+      "assignorId": "26000006000152",
+      "externalId": "DM-2026-3061",
+      "invoiceKey": "35261010000000000000000000000000000000000073",
+      "debtorTaxId": "81000147000183",
+      "faceValue": 55000000,
+      "dueDate": "2027-01-12",
+      "paidAt": null
+    },
+    {
+      "assignorId": "37000017000159",
+      "externalId": "DM-2026-9999",
+      "invoiceKey": "35261010000000000000000000000000000000000254",
+      "debtorTaxId": "11000035000066",
+      "faceValue": 10000000,
+      "dueDate": "2027-04-13",
+      "paidAt": null
+    }
+  ]
+}
