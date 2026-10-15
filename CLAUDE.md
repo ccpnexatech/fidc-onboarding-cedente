@@ -35,7 +35,8 @@ make check     # lint + tipos + arquitetura + testes + lint OpenAPI (rodar antes
 make api       # sobe o mock da API e o Swagger em /docs
 make newman    # roda a coleção Postman
 make conciliacao  # testa o SQL de conciliação no Postgres
-make docs      # serve o site de documentação
+make docs      # serve o site de documentação (publicado em https://ccpnexatech.github.io/fidc-onboarding-cedente/)
+make diagramas # renderiza os diagramas Mermaid (no CI; nesta máquina o Chrome não mede texto SVG)
 ```
 
 A `main` está sempre verde. Se algo falha, a falha é da mudança atual.

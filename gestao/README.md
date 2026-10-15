@@ -19,5 +19,6 @@ Regra: `.claude/rules/gestao.md`.
 | Item | Status |
 |---|---|
 | Quadro com colunas e issues HU-01 a HU-11 | feito |
-| Status report 2026-10-14 | feito |
-| Métricas (lead time pendente dos merges) | feito |
+| Status reports 2026-10-14 e 2026-10-15 | feito |
+| Métricas com lead time real (horas) | feito |
+| Quadro automático, validação de PR, rotina semanal e Pages (ADR-0007, #30 a #33) | feito |
