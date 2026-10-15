@@ -1,0 +1,17 @@
+{
+  "name": "fidc-onboarding-cedente-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mock da API de remessa de recebíveis do FIDC simulado",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "lint:openapi": "redocly lint openapi.yaml",
+    "check": "npm run -s lint:openapi"
+  },
+  "devDependencies": {
+    "@redocly/cli": "1.34.3"
+  }
+}

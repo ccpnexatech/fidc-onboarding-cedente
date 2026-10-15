@@ -1,0 +1,8 @@
+extends:
+  - recommended
+rules:
+  operation-4xx-problem-details-rfc7807: error
+  # O mock não tem autenticação; em produção seria OAuth2 client credentials (ver "Melhorias propostas" em api/README.md).
+  security-defined: off
+  # O servidor declarado é o mock local; não há ambiente público.
+  no-server-example.com: off
