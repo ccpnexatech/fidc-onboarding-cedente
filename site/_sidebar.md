@@ -16,5 +16,7 @@
   - [Status 2026-10-14](gestao/status/2026-10-14.md)
   - [Métricas](gestao/metricas.md)
 - [Decisões (ADRs)](decisoes/README.md)
-- [Diário](diario/2026-10-14.md)
+- Diário
+  - [2026-10-14](diario/2026-10-14.md)
+  - [2026-10-15](diario/2026-10-15.md)
 - [English](README.en.md)
