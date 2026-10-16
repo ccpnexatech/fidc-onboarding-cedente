@@ -1,4 +1,5 @@
-- [Início](README.md)
+- [Leia em 2 minutos](RESUMO.md)
+- [Visão técnica](README.md)
 - [Premissas](premissas.md)
 - [Glossário](docs/glossario.md)
 - Discovery

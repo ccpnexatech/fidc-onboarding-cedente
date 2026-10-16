@@ -1,5 +1,7 @@
 # fidc-onboarding-cedente
 
+**Novo por aqui? [Leia em 2 minutos](RESUMO.md):** o problema, o que foi feito e as decisões de negócio, sem jargão.
+
 [![check](https://github.com/ccpnexatech/fidc-onboarding-cedente/actions/workflows/check.yml/badge.svg)](https://github.com/ccpnexatech/fidc-onboarding-cedente/actions/workflows/check.yml)
 [![pages](https://github.com/ccpnexatech/fidc-onboarding-cedente/actions/workflows/pages.yml/badge.svg)](https://ccpnexatech.github.io/fidc-onboarding-cedente/)
 
