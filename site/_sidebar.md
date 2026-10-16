@@ -12,6 +12,9 @@
   - [Referência da API (Redoc)](site/api.html ':ignore')
   - [Homologação (Postman)](api/postman/README.md)
   - [Conciliação (SQL)](api/sql/README.md)
+- Comunicação
+  - [E-mail de rejeição ao cedente](docs/comunicacao/rejeicao-cedente.md)
+  - [Resumo para a diretoria](docs/comunicacao/resumo-diretoria.md)
 - Gestão
   - [Quadro, métricas e status](gestao/README.md)
   - [Status 2026-10-15](gestao/status/2026-10-15.md)
