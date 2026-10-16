@@ -1,6 +1,6 @@
 # ADR-0003 · Comentários no código: só para rastrear regra e fonte
 
-- **Status:** proposta
+- **Status:** aceita
 - **Data:** 2026-10-14
 - **Issue:** —
 
@@ -16,9 +16,11 @@ O código do mock aplica regras que vêm de norma e de regulamento (ADR-0005, AD
 
 ## Decisão
 
-Opção 1, adotada por delegação do Caio em 2026-10-14 ("siga sem mim, tome as decisões recomendadas").
+Opção 1: sem comentários, apenas documentação, mantendo só a linha `// RN-NN · <fonte>` que liga o código à regra.
 
-<!-- Caio: escreva aqui, com as suas palavras, por que essa opção e o que você aceita perder. Até lá o status fica proposta. -->
+Precisamos de documentos, não de comentários. O código é autoexplicativo para quem é da área; por isso usamos clean code.
+
+O que aceito perder: não vejo perdas, já que está tudo bem documentado.
 
 ## Consequências
 

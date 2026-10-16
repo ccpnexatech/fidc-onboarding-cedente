@@ -1,6 +1,6 @@
 # ADR-0001 · Quadro de entrega no GitHub Projects em vez de Jira
 
-- **Status:** proposta
+- **Status:** aceita
 - **Data:** 2026-10-14
 - **Issue:** —
 
@@ -18,7 +18,9 @@ O P3 precisa de um quadro real, com histórico, WIP e lead time, para provar aco
 
 GitHub Projects.
 
-<!-- Caio: escreva aqui, com as suas palavras, por que essa opção e o que você aceita perder. -->
+Escolhi o GitHub Projects para centralizar a ferramenta de trabalho no GitHub. Também pesaram o custo zero, o escopo pequeno do projeto e a facilidade de uso.
+
+O que aceito perder: a prova direta de Jira. Jira é mais uma ferramenta de controle; sei me adaptar a qualquer ferramenta e não vejo isso como impedimento.
 
 ## Consequências
 

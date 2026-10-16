@@ -1,6 +1,6 @@
 # ADR-0006 · Regulamentos-modelo: BMA como base, Solis como complemento
 
-- **Status:** proposta
+- **Status:** aceita
 - **Data:** 2026-10-14
 - **Issue:** —
 
@@ -20,7 +20,9 @@ Opção 1.
 
 Sobre o BMA como base: "Motivo claro, temos um norte regulamentado e com regras bem definidas."
 
-<!-- Caio: escreva aqui, com as suas palavras, por que complementar com as regras da Solis e o que você aceita perder com duas fontes. -->
+Sobre a Solis como complemento: o BMA é a base, e a Solis acrescenta robustez às regras.
+
+Sobre manter duas fontes: vejo como uma adaptação que aumenta a chance de sucesso e dá mais exposição a regras diferentes.
 
 ## Consequências
 

@@ -1,6 +1,6 @@
 # ADR-0002 · Stack do mock: NestJS, TypeScript e Postgres
 
-- **Status:** proposta
+- **Status:** aceita
 - **Data:** 2026-10-14
 - **Issue:** —
 
@@ -16,9 +16,9 @@ O P2 precisa de um mock da API de remessa que aplique de verdade as regras de el
 
 ## Decisão
 
-Opção 1, adotada por delegação do Caio em 2026-10-14 ("siga sem mim, tome as decisões recomendadas").
+Opção 1. É uma stack forte, moderna e segura, e rápida de construir para um projeto pequeno.
 
-<!-- Caio: escreva aqui, com as suas palavras, por que essa opção e o que você aceita perder. Até lá o status fica proposta. -->
+O que aceito perder: estruturar do zero demora mais e cria mais dependências. Em troca, a inversão de dependências funcionou bem, e essa estrutura fica reutilizável em outros projetos.
 
 ## Consequências
 

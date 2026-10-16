@@ -1,6 +1,6 @@
 # ADR-0007 · Automação do fluxo: GitHub Actions move o quadro e registra o histórico na issue
 
-- **Status:** proposta
+- **Status:** aceita
 - **Data:** 2026-10-15
 - **Issue:** #30 (também orienta #31, #32 e #33)
 
@@ -42,7 +42,9 @@ Hoje o card só anda quando alguém roda `gestao/quadro.sh`, e o status report e
 
 Opção 1, com o token do próprio `gh` do Caio no secret `PROJECT_TOKEN` (escolha dele, em vez de um token dedicado só com `project` e `public_repo`).
 
-<!-- Caio: escreva aqui, com as suas palavras, por que essa opção e o que você aceita perder. Vale incluir o porquê de reusar o token do gh em vez de um token de escopo mínimo. -->
+Escolhi essa opção para ter maior controle do fluxo junto ao Claude.
+
+Sobre o token: o controle fica com o operador, e o foco é destruir o token depois do uso.
 
 ## Consequências
 
