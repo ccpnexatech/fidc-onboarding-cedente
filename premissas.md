@@ -2,6 +2,8 @@
 
 Suposições sobre a operação do FIDC simulado, cada uma com método de validação e status. A premissa invalidada gera uma ADR com a mudança decorrente.
 
+As premissas `a validar` são cobertas pelo [roteiro de validação](docs/discovery/roteiro-validacao.md), uma entrevista de 30 minutos com quem opera FIDC.
+
 | # | Premissa | Por que importa | Como validar | Status |
 |---|---|---|---|---|
 | PR-01 | O cedente hoje envia a carteira por planilha, por e-mail, e recebe as rejeições do mesmo jeito. | Define o AS-IS e o tamanho do ganho. | Comparar com regulamentos e materiais públicos de FIDCs; conversa com quem opera. | a validar |

@@ -7,6 +7,7 @@
   - [Regras RN-01 a RN-10](docs/discovery/regras.md)
   - [Histórias HU-01 a HU-11](docs/discovery/historias.md)
   - [Backlog RICE e MoSCoW](docs/discovery/backlog.md)
+  - [Roteiro de validação](docs/discovery/roteiro-validacao.md)
 - API
   - [Visão geral e arquitetura](api/README.md)
   - [Referência da API (Redoc)](site/api.html ':ignore')
