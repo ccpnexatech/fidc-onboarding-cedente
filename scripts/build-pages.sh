@@ -18,7 +18,12 @@ cat > "$saida/index.html" <<'HTML'
 <head>
   <meta charset="utf-8">
   <meta http-equiv="refresh" content="0; url=site/">
-  <title>fidc-onboarding-cedente</title>
+  <title>FIDC · Onboarding de cedentes</title>
+  <meta name="description" content="Onboarding digital de cedentes em um FIDC simulado: regras de elegibilidade ligadas à CVM 175, API homologada e conciliação automática com a custódia.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="FIDC · Onboarding de cedentes">
+  <meta property="og:description" content="Onboarding digital de cedentes em um FIDC simulado: regras de elegibilidade ligadas à CVM 175, API homologada e conciliação automática com a custódia.">
+  <meta property="og:url" content="https://ccpnexatech.github.io/fidc-onboarding-cedente/">
 </head>
 <body>
   <p><a href="site/">Documentação do fidc-onboarding-cedente</a></p>
