@@ -32,7 +32,7 @@ Este projeto substitui esse fluxo por uma API de remessa com regras de elegibili
 | **Mock** | API NestJS que aplica as 10 regras e valida cada requisição contra o próprio contrato. | [`api/`](api/README.md) |
 | **Homologação** | Coleção Postman com 29 casos e 63 asserções, executada pelo Newman no CI. | [`api/postman/`](api/postman/README.md) |
 | **Conciliação** | SQL remessa × custódia. Detecta título faltante, valor divergente, duplicidade e posição sem remessa. | [`api/sql/`](api/sql/README.md) |
-| **Gestão** | Quadro com movimentação automática, lead time medido, status report semanal gerado do quadro e do Git. | [`gestao/`](gestao/README.md) |
+| **Gestão** | Quadro com movimentação automática e status report semanal gerado do quadro e do Git. | [`gestao/`](gestao/README.md) |
 | **Decisões** | 7 ADRs com problema, opções, decisão e consequências. | [`decisoes/`](decisoes/README.md) |
 
 ## Rastreabilidade

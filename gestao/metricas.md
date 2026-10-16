@@ -1,5 +1,7 @@
 # Métricas de fluxo
 
+> **Nota:** estes números medem o processo de um projeto de 2 dias, não desempenho.
+
 Lead time por história e tarefa, calculado a partir do quadro, do Git e do GitHub por `gestao/metricas.sh`. Nenhum número é estimado. Convenções em [`.claude/rules/gestao.md`](../.claude/rules/gestao.md).
 
 ```bash

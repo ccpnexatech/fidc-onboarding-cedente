@@ -30,7 +30,7 @@ This project replaces that flow with a batch API whose eligibility rules are exp
 | **Mock** | NestJS API that applies the 10 rules and validates every request against the contract itself. | [`api/`](api/README.md) |
 | **Certification** | Postman collection with 29 cases and 63 assertions, run by Newman in CI. | [`api/postman/`](api/postman/README.md) |
 | **Reconciliation** | Batch × custody SQL. Detects missing receivables, amount mismatches, duplicates and custody positions with no batch. | [`api/sql/`](api/sql/README.md) |
-| **Delivery** | Board that moves on its own, measured lead time, weekly status report generated from the board and Git. | [`gestao/`](gestao/README.md) |
+| **Delivery** | Board that moves on its own and weekly status report generated from the board and Git. | [`gestao/`](gestao/README.md) |
 | **Decisions** | 7 ADRs with problem, options, decision and consequences. | [`decisoes/`](decisoes/README.md) |
 
 ## Traceability
