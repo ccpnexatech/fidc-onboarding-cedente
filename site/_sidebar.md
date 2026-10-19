@@ -18,7 +18,7 @@
   - [Resumo para a diretoria](docs/comunicacao/resumo-diretoria.md)
 - Gestão
   - [Quadro, métricas e status](gestao/README.md)
-  - [Status 2026-10-15](gestao/status/2026-10-15.md)
+  - [Status 2026-10-19](gestao/status/2026-10-19.md)
   - [Métricas](gestao/metricas.md)
 - [Decisões (ADRs)](decisoes/README.md)
 - Diário
