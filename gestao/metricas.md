@@ -11,7 +11,7 @@ bash gestao/metricas.sh   # regenera a tabela abaixo
 ## Lead time por item
 
 <!-- metricas:inicio -->
-_Gerado em 2026-10-15 por `gestao/metricas.sh`._
+_Gerado em 2026-10-19 por `gestao/metricas.sh`._
 
 | Issue | Título | PR | Início | Fonte do início | PR aberto | Merge | Início → PR (h) | Lead time (h) |
 |---|---|---|---|---|---|---|---|---|
@@ -33,8 +33,9 @@ _Gerado em 2026-10-15 por `gestao/metricas.sh`._
 | #30 | P3 · Quadro automático: card segue branch, PR e merge | #34 | 2026-10-15T17:38 | quadro.csv | 2026-10-15T17:41 | 2026-10-15T17:45 | 0,1 | 0,1 |
 | #31 | P3 · CI valida PR, commits e ADRs pendentes | #35 | 2026-10-15T17:46 | comentário | 2026-10-15T17:48 | 2026-10-15T17:52 | 0,0 | 0,1 |
 | #32 | P3 · Status report e métricas semanais automáticos | #36 | 2026-10-15T17:52 | comentário | 2026-10-15T17:56 | 2026-10-15T18:00 | 0,1 | 0,1 |
-| #33 | P3 · Publicar site e referência da API no GitHub Pages | — | — | — | — | — | — | — |
+| #33 | P3 · Publicar site e referência da API no GitHub Pages | #40 | 2026-10-15T18:17 | comentário | 2026-10-15T18:21 | 2026-10-15T18:25 | 0,1 | 0,1 |
 | #38 | Quadro falha em PR sem issue ligada | #39 | 2026-10-15T18:06 | comentário | 2026-10-15T18:07 | 2026-10-15T18:11 | 0,0 | 0,1 |
+| #42 | Revisão editorial da documentação | #43 | 2026-10-15T19:20 | comentário | 2026-10-15T19:24 | 2026-10-15T19:29 | 0,1 | 0,1 |
 <!-- metricas:fim -->
 
 Horários em UTC.
