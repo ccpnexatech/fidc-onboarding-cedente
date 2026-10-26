@@ -11,7 +11,7 @@ bash gestao/metricas.sh   # regenera a tabela abaixo
 ## Lead time por item
 
 <!-- metricas:inicio -->
-_Gerado em 2026-10-19 por `gestao/metricas.sh`._
+_Gerado em 2026-10-26 por `gestao/metricas.sh`._
 
 | Issue | Título | PR | Início | Fonte do início | PR aberto | Merge | Início → PR (h) | Lead time (h) |
 |---|---|---|---|---|---|---|---|---|
